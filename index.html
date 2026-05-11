@@ -4,88 +4,464 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>베스트밀</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#0d0d0d;color:#f0f0f0;font-family:'Noto Sans KR',sans-serif;min-height:100vh}
-input,button{font-family:inherit}
-.chip{padding:7px 14px;border-radius:999px;border:1.5px solid #2a2a2a;background:transparent;color:#707070;font-size:13px;cursor:pointer;margin:3px}
-.chip.on{background:#c8f135;border-color:#c8f135;color:#000;font-weight:700}
-.btn{width:100%;padding:14px;border-radius:12px;background:#c8f135;color:#000;border:none;font-size:15px;font-weight:700;cursor:pointer}
-.btn:disabled{background:#333;color:#666;cursor:not-allowed}
-.inp{width:100%;padding:12px 14px;border-radius:10px;background:#1e1e1e;border:1px solid #2a2a2a;color:#f0f0f0;font-size:15px;outline:none;margin-bottom:14px}
-.card{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:16px;padding:18px;margin-bottom:10px}
-.tag{background:rgba(200,241,53,.12);border:1px solid rgba(200,241,53,.2);border-radius:999px;padding:4px 10px;color:#c8f135;font-size:12px;display:inline-block;margin:2px}
-.tab{flex:1;padding:10px;border-radius:10px;background:#1e1e1e;border:1px solid #2a2a2a;color:#707070;font-size:13px;cursor:pointer}
-.tab.on{background:#c8f135;border-color:#c8f135;color:#000;font-weight:700}
+:root {
+  --orange: #FF6B35;
+  --orange-light: #FF8C5A;
+  --orange-pale: #FFF0EB;
+  --yellow: #FFB830;
+  --green: #2ECC71;
+  --dark: #1A1A2E;
+  --dark2: #16213E;
+  --gray: #6B7280;
+  --gray-light: #F3F4F6;
+  --gray-border: #E5E7EB;
+  --white: #FFFFFF;
+  --text: #1F2937;
+  --text-sub: #6B7280;
+  --shadow: 0 4px 24px rgba(255,107,53,0.12);
+  --shadow-card: 0 2px 16px rgba(0,0,0,0.08);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #FFF8F5;
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+input, button { font-family: inherit; }
+.chip {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--gray-border);
+  background: var(--white);
+  color: var(--gray);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 4px;
+  transition: all .18s ease;
+}
+.chip:hover { border-color: var(--orange); color: var(--orange); }
+.chip.on {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--white);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255,107,53,0.3);
+}
+.btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--orange), var(--orange-light));
+  color: var(--white);
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+  transition: all .2s ease;
+  letter-spacing: -0.3px;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,107,53,0.4); }
+.btn:active { transform: translateY(0); }
+.btn:disabled {
+  background: var(--gray-border);
+  color: var(--gray);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+.inp {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  border: 1.5px solid var(--gray-border);
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  margin-bottom: 12px;
+  transition: border-color .18s;
+}
+.inp:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
+.inp::placeholder { color: #C0C4CC; }
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-card);
+}
+.tag {
+  background: var(--orange-pale);
+  border: 1px solid rgba(255,107,53,0.2);
+  border-radius: 999px;
+  padding: 4px 12px;
+  color: var(--orange);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  margin: 3px;
+}
+.tab {
+  flex: 1;
+  padding: 11px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .18s;
+}
+.tab.on {
+  background: var(--white);
+  color: var(--orange);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+#page-auth { min-height: 100vh; display: flex; flex-direction: column; }
+.auth-hero {
+  background: linear-gradient(160deg, #FF6B35 0%, #FF8C5A 50%, #FFB830 100%);
+  padding: 60px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.auth-hero::before {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  top: -100px; right: -80px;
+}
+.auth-hero::after {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  bottom: -60px; left: -40px;
+}
+.auth-hero-emoji {
+  font-size: 64px;
+  margin-bottom: 16px;
+  display: block;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.auth-hero-title {
+  font-family: 'Gmarket Sans', 'Noto Sans KR', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.auth-hero-sub { color: rgba(255,255,255,0.85); font-size: 15px; }
+.auth-body {
+  flex: 1;
+  background: var(--white);
+  border-radius: 24px 24px 0 0;
+  margin-top: -20px;
+  padding: 32px 24px 40px;
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.mode-tabs {
+  display: flex;
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.mode-tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .18s;
+}
+.mode-tab.on {
+  background: var(--white);
+  color: var(--orange);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.auth-msg {
+  color: #EF4444;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 12px;
+  min-height: 20px;
+  font-weight: 500;
+}
+#page-profile { display: none; padding-bottom: 80px; }
+.profile-header {
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.profile-header-title { color: #fff; font-weight: 700; font-size: 18px; }
+.section-label {
+  font-size: 13px;
+  color: var(--gray);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+#page-home { display: none; padding-bottom: 80px; }
+.home-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-border);
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.home-header-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.home-logo {
+  font-family: 'Gmarket Sans', 'Noto Sans KR', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--orange);
+}
+.points-badge {
+  background: linear-gradient(135deg, var(--orange), var(--yellow));
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255,107,53,0.3);
+}
+.logout-btn {
+  background: none;
+  border: none;
+  color: var(--gray);
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 8px;
+}
+.bottom-tabs {
+  display: flex;
+  background: var(--gray-light);
+  border-radius: 12px;
+  padding: 4px;
+  margin: 12px 0;
+}
+.rec-main-card {
+  background: linear-gradient(135deg, #FF6B35, #FFB830);
+  border-radius: 20px;
+  padding: 28px 24px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.rec-main-card::before {
+  content: '🍽️';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 64px;
+  opacity: 0.2;
+}
+.rec-main-card .card-title { color: #fff; font-size: 13px; font-weight: 500; margin-bottom: 6px; opacity: 0.9; }
+.rec-main-card .card-sub { color: #fff; font-size: 22px; font-weight: 700; }
+.weather-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+}
+.weather-label { font-size: 13px; color: var(--gray); font-weight: 600; margin-bottom: 12px; }
+.result-hero {
+  background: linear-gradient(160deg, #FFF8F5, #FFF0E8);
+  border: 2px solid rgba(255,107,53,0.2);
+  border-radius: 20px;
+  padding: 28px 24px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.result-emoji { font-size: 56px; margin-bottom: 10px; display: block; }
+.result-name {
+  font-family: 'Gmarket Sans', 'Noto Sans KR', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.result-reason { color: var(--text-sub); font-size: 14px; line-height: 1.8; text-align: left; }
+.step-item { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+.step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-light));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(255,107,53,0.3);
+}
+.step-text { color: var(--text); font-size: 14px; line-height: 1.7; padding-top: 3px; }
+.ing-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-light);
+  margin-bottom: 8px;
+  text-decoration: none;
+  transition: all .18s;
+  border: 1.5px solid transparent;
+}
+.ing-item:hover { background: var(--orange-pale); border-color: rgba(255,107,53,0.2); }
+.ing-name { color: var(--text); font-size: 14px; font-weight: 600; }
+.ing-amount { color: var(--gray); font-size: 12px; margin-top: 2px; }
+.ing-buy { color: var(--orange); font-size: 12px; font-weight: 700; align-self: center; }
+.log-item {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--gray-border);
+}
+.pv-stat { background: var(--gray-light); border-radius: var(--radius-sm); padding: 12px 14px; }
+.pv-stat-label { color: var(--gray); font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+.pv-stat-value { color: var(--text); font-weight: 700; font-size: 15px; }
+.upload-card {
+  background: linear-gradient(135deg, #FFF8F5, #FFF0E8);
+  border: 2px dashed rgba(255,107,53,0.3);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.test-badge {
+  background: #FEF3C7;
+  border: 1px solid #F59E0B;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #92400E;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.divider { border: none; border-top: 1px solid var(--gray-border); margin: 20px 0; }
 </style>
 </head>
 <body>
 
 <div id="page-auth">
-  <div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 24px">
-    <div style="max-width:400px;margin:0 auto;width:100%">
-      <div style="text-align:center;margin-bottom:48px">
-        <div style="font-size:52px;margin-bottom:12px">🍽️</div>
-        <div style="font-size:28px;font-weight:700;color:#c8f135">베스트밀</div>
-        <div style="color:#707070;font-size:14px;margin-top:6px">AI 맞춤 메뉴 추천 서비스</div>
-      </div>
-      <div style="display:flex;background:#1e1e1e;border-radius:12px;padding:4px;margin-bottom:24px">
-        <button onclick="setMode('login')" id="btn-mode-login" class="tab on">로그인</button>
-        <button onclick="setMode('signup')" id="btn-mode-signup" class="tab">회원가입</button>
-      </div>
-      <div id="nick-wrap" style="display:none"><input id="inp-nick" class="inp" placeholder="닉네임"></div>
-      <input id="inp-email" class="inp" type="email" placeholder="이메일">
-      <input id="inp-pw" class="inp" type="password" placeholder="비밀번호 (6자 이상)">
-      <div id="auth-msg" style="color:#ff8080;font-size:13px;text-align:center;margin-bottom:12px;min-height:20px"></div>
-      <button id="auth-btn" class="btn" onclick="doAuth()">로그인</button>
+  <div class="auth-hero">
+    <span class="auth-hero-emoji">🍽️</span>
+    <div class="auth-hero-title">베스트밀</div>
+    <div class="auth-hero-sub">AI가 골라주는 오늘의 완벽한 한 끼</div>
+  </div>
+  <div class="auth-body">
+    <div class="mode-tabs">
+      <button onclick="setMode('login')" id="btn-mode-login" class="mode-tab on">로그인</button>
+      <button onclick="setMode('signup')" id="btn-mode-signup" class="mode-tab">회원가입</button>
+    </div>
+    <div id="nick-wrap" style="display:none">
+      <input id="inp-nick" class="inp" placeholder="닉네임">
+    </div>
+    <input id="inp-email" class="inp" type="email" placeholder="이메일">
+    <input id="inp-pw" class="inp" type="password" placeholder="비밀번호 (6자 이상)">
+    <div id="auth-msg" class="auth-msg"></div>
+    <button id="auth-btn" class="btn" onclick="doAuth()">로그인</button>
+    <div style="text-align:center;margin-top:20px;color:var(--gray);font-size:13px">
+      맛있는 한 끼, 베스트밀이 추천해드려요 🍜
     </div>
   </div>
 </div>
 
-<div id="page-profile" style="display:none;padding-bottom:60px">
-  <div style="background:#161616;border-bottom:1px solid #2a2a2a;padding:16px 20px;position:sticky;top:0;z-index:10">
-    <span style="color:#c8f135;font-weight:700;font-size:17px">👤 프로필 설정</span>
+<div id="page-profile">
+  <div class="profile-header">
+    <div class="profile-header-title">👤 프로필 설정</div>
   </div>
   <div style="max-width:480px;margin:0 auto;padding:24px 20px">
-    <p style="color:#707070;font-size:14px;margin-bottom:28px">한 번만 설정하면 매번 맞춤 추천을 받을 수 있어요</p>
-    <div style="font-size:12px;color:#707070;margin-bottom:8px">성별</div><div id="g-gender" style="margin-bottom:20px"></div>
-    <div style="font-size:12px;color:#707070;margin-bottom:8px">나이대</div><div id="g-age" style="margin-bottom:20px"></div>
-    <div style="font-size:12px;color:#707070;margin-bottom:8px">직업</div><div id="g-job" style="margin-bottom:20px"></div>
-    <div style="font-size:12px;color:#707070;margin-bottom:8px">지역</div><div id="g-region" style="margin-bottom:20px"></div>
-    <div style="font-size:12px;color:#707070;margin-bottom:8px">못 먹는 음식 (복수선택)</div><div id="g-cannot" style="margin-bottom:20px"></div>
-    <div style="font-size:12px;color:#707070;margin-bottom:8px">싫어하는 음식 (복수선택)</div><div id="g-dislike" style="margin-bottom:20px"></div>
-    <div style="font-size:12px;color:#707070;margin-bottom:8px">식단 조건</div><div id="g-diet" style="margin-bottom:24px"></div>
+    <div style="background:var(--orange-pale);border-radius:var(--radius);padding:14px 16px;margin-bottom:24px;border-left:4px solid var(--orange)">
+      <div style="font-weight:700;color:var(--orange);font-size:14px;margin-bottom:4px">한 번만 설정하면 끝!</div>
+      <div style="color:var(--gray);font-size:13px">입력하신 정보로 딱 맞는 메뉴를 추천해드려요</div>
+    </div>
+    <div class="section-label">성별</div><div id="g-gender" style="margin-bottom:20px"></div>
+    <div class="section-label">나이대</div><div id="g-age" style="margin-bottom:20px"></div>
+    <div class="section-label">직업</div><div id="g-job" style="margin-bottom:20px"></div>
+    <div class="section-label">지역</div><div id="g-region" style="margin-bottom:20px"></div>
+    <div class="section-label">못 먹는 음식 <span style="color:var(--gray);font-weight:400">(복수선택)</span></div>
+    <div id="g-cannot" style="margin-bottom:20px"></div>
+    <div class="section-label">싫어하는 음식 <span style="color:var(--gray);font-weight:400">(복수선택)</span></div>
+    <div id="g-dislike" style="margin-bottom:20px"></div>
+    <div class="section-label">식단 조건</div><div id="g-diet" style="margin-bottom:28px"></div>
     <button class="btn" onclick="doSaveProfile()">저장하고 시작하기 →</button>
   </div>
 </div>
 
-<div id="page-home" style="display:none;padding-bottom:80px">
-  <div style="background:#161616;border-bottom:1px solid #2a2a2a;padding:14px 20px;position:sticky;top:0;z-index:10">
-    <div style="max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center">
+<div id="page-home">
+  <div class="home-header">
+    <div class="home-header-inner">
       <div>
-        <div style="color:#c8f135;font-weight:700;font-size:17px">🍽️ 베스트밀</div>
-        <div id="h-nick" style="color:#707070;font-size:11px"></div>
+        <div class="home-logo">🍽️ 베스트밀</div>
+        <div id="h-nick" style="color:var(--gray);font-size:11px;margin-top:1px"></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
-        <div id="h-pts" style="background:rgba(200,241,53,.12);border:1px solid #c8f135;border-radius:20px;padding:4px 12px;color:#c8f135;font-size:13px;font-weight:700">🪙 0P</div>
-        <button onclick="doLogout()" style="background:none;border:none;color:#707070;font-size:12px;cursor:pointer">로그아웃</button>
+        <div id="h-pts" class="points-badge">🪙 0P</div>
+        <button onclick="doLogout()" class="logout-btn">로그아웃</button>
       </div>
     </div>
   </div>
   <div style="max-width:480px;margin:0 auto;padding:0 20px">
-    <div style="display:flex;gap:4px;padding:14px 0 8px">
+    <div class="bottom-tabs" style="margin-top:16px">
       <button class="tab on" onclick="showTab('rec',this)">🤖 추천</button>
       <button class="tab" onclick="showTab('log',this)">📋 기록</button>
       <button class="tab" onclick="showTab('pv',this)">👤 프로필</button>
     </div>
     <div id="tab-rec">
-      <div class="card" style="margin-bottom:14px">
-        <div style="color:#707070;font-size:13px;margin-bottom:10px">오늘 날씨가 어때요?</div>
+      <div class="rec-main-card">
+        <div class="card-title">오늘도 고민되나요?</div>
+        <div class="card-sub">AI가 딱 맞는 메뉴를 골라드려요</div>
+      </div>
+      <div class="weather-card">
+        <div class="weather-label">🌤 오늘 날씨가 어때요?</div>
         <div id="g-weather"></div>
       </div>
       <button class="btn" id="btn-rec" onclick="doRec()">🍴 맞춤 메뉴 추천받기</button>
-      <div id="rec-result" style="margin-top:18px"></div>
+      <div id="rec-result" style="margin-top:20px"></div>
     </div>
     <div id="tab-log" style="display:none"><div id="log-list"></div></div>
     <div id="tab-pv" style="display:none"><div id="pv-content"></div></div>
@@ -99,18 +475,13 @@ const SB="https://ezhxmpiljkhnprepnhba.supabase.co";
 const AK="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6aHhtcGlsamtobnByZXBuaGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMDkwMTAsImV4cCI6MjA5Mzc4NTAxMH0.PkwFl3gqafYUzvmYk9yENSWx8JuMQUGIUnu8cLWNt6Y";
 let TK=null,UID=null,UEMAIL=null,PRF=null,UMENU=null,MODE="login";
 
-// 더미 메뉴 데이터 (API 없이 테스트용)
-const DUMMY_MENUS = [
-  {menu:"된장찌개",emoji:"🍲",reason:"비 오는 날 따뜻한 된장찌개는 몸을 녹여줘요. 직장인에게 영양 균형이 좋은 한식입니다. 인천 지역 식재료로 만들기 좋아요.",recipe:{time:"20분",difficulty:"쉬움",steps:["냄비에 물 500ml를 끓여요","된장 2큰술을 풀어줘요","두부, 호박, 버섯을 넣어요","파를 넣고 5분 더 끓이면 완성!"]},ingredients:[{name:"된장",amount:"2큰술",keyword:"샘표 된장"},{name:"두부",amount:"1/2모",keyword:"풀무원 두부"},{name:"애호박",amount:"1/4개",keyword:"애호박"},{name:"버섯",amount:"한줌",keyword:"표고버섯"}],pairing:"공깃밥 + 김치",alternatives:["김치찌개","순두부찌개"]},
-  {menu:"닭갈비",emoji:"🍗",reason:"단백질이 풍부해 직장인 점심으로 최고예요. 매콤한 맛이 스트레스 해소에 도움돼요. 오늘 날씨에 든든하게 먹기 좋아요.",recipe:{time:"25분",difficulty:"보통",steps:["닭고기를 한입 크기로 잘라요","양념장(고추장, 간장, 설탕)을 만들어요","채소와 닭고기를 양념에 버무려요","팬에 기름 두르고 볶아주면 완성!"]},ingredients:[{name:"닭고기",amount:"300g",keyword:"닭갈비용 닭고기"},{name:"고추장",amount:"2큰술",keyword:"해찬들 고추장"},{name:"양배추",amount:"1/4통",keyword:"양배추"},{name:"떡",amount:"100g",keyword:"떡볶이떡"}],pairing:"공깃밥 + 음료수",alternatives:["제육볶음","오삼불고기"]},
-  {menu:"비빔밥",emoji:"🥗",reason:"채소가 풍부해 영양 균형이 완벽해요. 간단하게 만들 수 있어 바쁜 직장인에게 딱이에요. 다양한 나물로 맛과 영양을 동시에!",recipe:{time:"15분",difficulty:"쉬움",steps:["밥을 그릇에 담아요","시금치, 당근, 콩나물 나물을 올려요","계란 프라이를 올려요","고추장과 참기름을 넣고 비벼요"]},ingredients:[{name:"밥",amount:"1공기",keyword:"햇반"},{name:"시금치",amount:"한줌",keyword:"시금치"},{name:"계란",amount:"1개",keyword:"계란"},{name:"고추장",amount:"1큰술",keyword:"비빔밥 고추장"}],pairing:"미역국 + 물김치",alternatives:["덮밥","볶음밥"]}
+const DUMMY_MENUS=[
+  {menu:"된장찌개",emoji:"🍲",reason:"비 오는 날 따뜻한 된장찌개는 몸을 녹여줘요. 직장인에게 영양 균형이 좋은 한식입니다.",recipe:{time:"20분",difficulty:"쉬움",steps:["냄비에 물 500ml를 끓여요","된장 2큰술을 풀어줘요","두부, 호박, 버섯을 넣어요","파를 넣고 5분 더 끓이면 완성!"]},ingredients:[{name:"된장",amount:"2큰술",keyword:"샘표 된장"},{name:"두부",amount:"1/2모",keyword:"풀무원 두부"},{name:"애호박",amount:"1/4개",keyword:"애호박"},{name:"버섯",amount:"한줌",keyword:"표고버섯"}],pairing:"공깃밥 + 김치",alternatives:["김치찌개","순두부찌개"]},
+  {menu:"닭갈비",emoji:"🍗",reason:"단백질이 풍부해 직장인 점심으로 최고예요. 매콤한 맛이 스트레스 해소에 도움돼요.",recipe:{time:"25분",difficulty:"보통",steps:["닭고기를 한입 크기로 잘라요","양념장(고추장, 간장, 설탕)을 만들어요","채소와 닭고기를 양념에 버무려요","팬에 기름 두르고 볶아주면 완성!"]},ingredients:[{name:"닭고기",amount:"300g",keyword:"닭갈비용 닭고기"},{name:"고추장",amount:"2큰술",keyword:"해찬들 고추장"},{name:"양배추",amount:"1/4통",keyword:"양배추"},{name:"떡",amount:"100g",keyword:"떡볶이떡"}],pairing:"공깃밥 + 음료수",alternatives:["제육볶음","오삼불고기"]},
+  {menu:"비빔밥",emoji:"🥗",reason:"채소가 풍부해 영양 균형이 완벽해요. 간단하게 만들 수 있어 바쁜 직장인에게 딱이에요.",recipe:{time:"15분",difficulty:"쉬움",steps:["밥을 그릇에 담아요","시금치, 당근, 콩나물 나물을 올려요","계란 프라이를 올려요","고추장과 참기름을 넣고 비벼요"]},ingredients:[{name:"밥",amount:"1공기",keyword:"햇반"},{name:"시금치",amount:"한줌",keyword:"시금치"},{name:"계란",amount:"1개",keyword:"계란"},{name:"고추장",amount:"1큰술",keyword:"비빔밥 고추장"}],pairing:"미역국 + 물김치",alternatives:["덮밥","볶음밥"]}
 ];
 
-function page(id){
-  ["page-auth","page-profile","page-home"].forEach(function(p){
-    document.getElementById(p).style.display=(p===id)?"block":"none";
-  });
-}
+function page(id){["page-auth","page-profile","page-home"].forEach(function(p){document.getElementById(p).style.display=(p===id)?"block":"none";});}
 function H(){return{apikey:AK,Authorization:"Bearer "+TK,"Content-Type":"application/json"};}
 async function sbGet(path){const r=await fetch(SB+path,{headers:H()});return r.json();}
 
@@ -140,8 +511,8 @@ function chips(id,items,field,multi){
 
 function setMode(m){
   MODE=m;
-  document.getElementById("btn-mode-login").className="tab"+(m==="login"?" on":"");
-  document.getElementById("btn-mode-signup").className="tab"+(m==="signup"?" on":"");
+  document.getElementById("btn-mode-login").className="mode-tab"+(m==="login"?" on":"");
+  document.getElementById("btn-mode-signup").className="mode-tab"+(m==="signup"?" on":"");
   document.getElementById("nick-wrap").style.display=m==="signup"?"block":"none";
   document.getElementById("auth-btn").textContent=m==="login"?"로그인":"가입하기";
 }
@@ -198,7 +569,7 @@ async function doSaveProfile(){
 }
 
 function initHome(){
-  document.getElementById("h-nick").textContent=PRF&&PRF.nickname?PRF.nickname:UEMAIL;
+  document.getElementById("h-nick").textContent=PRF&&PRF.nickname?PRF.nickname+"님 환영해요 👋":UEMAIL;
   document.getElementById("h-pts").textContent="🪙 "+(PRF&&PRF.points?PRF.points:0)+"P";
   chips("g-weather",WEATHER,"weather",false);
   loadLogs();renderPV();
@@ -214,21 +585,37 @@ function showTab(name,btn){
 async function doRec(){
   if(!SEL.weather){alert("날씨를 선택해주세요!");return;}
   const btn=document.getElementById("btn-rec");
-  btn.textContent="🤔 추천 중...";btn.disabled=true;
-  document.getElementById("rec-result").innerHTML="";
-  // 더미 데이터에서 랜덤 선택
-  await new Promise(function(r){setTimeout(r,1000);}); // 1초 딜레이로 자연스럽게
+  btn.textContent="🤔 맞춤 메뉴 찾는 중...";btn.disabled=true;
+  document.getElementById("rec-result").innerHTML='<div style="text-align:center;padding:40px 0;color:var(--gray)"><div style="font-size:36px;margin-bottom:10px;animation:float 1s ease-in-out infinite">🍳</div><div style="font-size:14px">AI가 메뉴를 고르고 있어요...</div></div>';
+  await new Promise(function(r){setTimeout(r,1200);});
   const r=DUMMY_MENUS[Math.floor(Math.random()*DUMMY_MENUS.length)];
   renderRec(r);
-  btn.textContent="🍴 맞춤 메뉴 추천받기";btn.disabled=false;
+  btn.textContent="🍴 다른 메뉴 추천받기";btn.disabled=false;
 }
 
 function renderRec(r){
-  const steps=r.recipe.steps.map(function(s,i){return '<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:rgba(200,241,53,.12);border:1px solid #c8f135;color:#c8f135;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">'+(i+1)+'</div><div style="color:#f0f0f0;font-size:14px;line-height:1.6;padding-top:2px">'+s+'</div></div>';}).join("");
-  const ings=r.ingredients.map(function(g){return '<a href="https://www.coupang.com/np/search?q='+encodeURIComponent(g.keyword)+'" target="_blank" style="display:flex;justify-content:space-between;padding:10px 12px;border-radius:9px;background:#0d0d0d;margin-bottom:6px;text-decoration:none"><div><div style="color:#f0f0f0;font-size:14px;font-weight:500">'+g.name+'</div><div style="color:#707070;font-size:12px">'+g.amount+'</div></div><div style="color:#c8f135;font-size:12px;align-self:center">구매 →</div></a>';}).join("");
+  const steps=r.recipe.steps.map(function(s,i){return '<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-text">'+s+'</div></div>';}).join("");
+  const ings=r.ingredients.map(function(g){return '<a href="https://www.coupang.com/np/search?q='+encodeURIComponent(g.keyword)+'" target="_blank" class="ing-item"><div><div class="ing-name">'+g.name+'</div><div class="ing-amount">'+g.amount+'</div></div><div class="ing-buy">구매 →</div></a>';}).join("");
   const alts=r.alternatives.map(function(a){return '<span class="tag">'+a+'</span>';}).join("");
   const menu=r.menu.replace(/'/g,"\\'");
-  document.getElementById("rec-result").innerHTML='<div style="background:#0d0d0d;border:1px solid #333;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#c8f135">⚠️ 테스트 모드 - API 연결 시 실제 AI 추천으로 바뀌어요</div><div style="background:#161616;border:1px solid #c8f135;border-radius:20px;padding:22px;margin-bottom:10px"><div style="font-size:44px;margin-bottom:6px">'+r.emoji+'</div><div style="font-size:24px;font-weight:700;margin-bottom:8px">'+r.menu+'</div><p style="color:#707070;font-size:14px;line-height:1.7;margin:0 0 14px">'+r.reason+'</p><span class="tag">⏱ '+r.recipe.time+'</span> <span class="tag">📊 '+r.recipe.difficulty+'</span> <span class="tag">🥂 '+r.pairing+'</span></div><div class="card"><div style="font-weight:600;margin-bottom:12px">📋 레시피</div>'+steps+'</div><div class="card"><div style="font-weight:600;margin-bottom:12px">🛒 재료 구매 (클릭→쿠팡)</div>'+ings+'</div><div class="card"><div style="font-weight:600;margin-bottom:8px">🔄 다른 추천</div>'+alts+'</div><div class="card" style="text-align:center"><div style="font-size:28px;margin-bottom:6px">📸</div><div style="font-weight:600;margin-bottom:4px">먹은 사진 인증하고 +50P!</div><div style="color:#707070;font-size:13px;margin-bottom:14px">사진을 올리면 포인트를 드려요</div><button class="btn" onclick="startUpload(\''+menu+'\')">📷 사진 업로드</button></div>';
+  document.getElementById("rec-result").innerHTML=
+    '<div class="test-badge">⚠️ 테스트 모드 · API 연결 시 실제 AI 추천으로 업그레이드돼요</div>'+
+    '<div class="result-hero">'+
+      '<span class="result-emoji">'+r.emoji+'</span>'+
+      '<div class="result-name">'+r.menu+'</div>'+
+      '<p class="result-reason">'+r.reason+'</p>'+
+      '<hr style="border:none;border-top:1px solid var(--gray-border);margin:16px 0">'+
+      '<div style="display:flex;flex-wrap:wrap;justify-content:center"><span class="tag">⏱ '+r.recipe.time+'</span><span class="tag">📊 '+r.recipe.difficulty+'</span><span class="tag">🥂 '+r.pairing+'</span></div>'+
+    '</div>'+
+    '<div class="card"><div style="font-weight:700;font-size:15px;margin-bottom:14px">📋 레시피</div>'+steps+'</div>'+
+    '<div class="card"><div style="font-weight:700;font-size:15px;margin-bottom:12px">🛒 재료 구매 <span style="color:var(--gray);font-weight:400;font-size:12px">(클릭 → 쿠팡)</span></div>'+ings+'</div>'+
+    '<div class="card"><div style="font-weight:700;font-size:15px;margin-bottom:10px">🔄 다른 추천</div>'+alts+'</div>'+
+    '<div class="upload-card">'+
+      '<div style="font-size:36px;margin-bottom:8px">📸</div>'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:6px">먹은 사진 인증하고 +50P!</div>'+
+      '<div style="color:var(--gray);font-size:13px;margin-bottom:16px">사진을 올리면 포인트를 드려요</div>'+
+      '<button class="btn" onclick="startUpload(\''+menu+'\')">📷 사진 업로드</button>'+
+    '</div>';
 }
 
 function startUpload(menu){UMENU=menu;document.getElementById("file-inp").click();}
@@ -239,7 +626,6 @@ async function doPhoto(e){
   const path=UID+"/"+Date.now()+".jpg";
   await fetch(SB+"/storage/v1/object/meal-photos/"+path,{method:"POST",headers:{apikey:AK,Authorization:"Bearer "+TK},body:file});
   const photoUrl=SB+"/storage/v1/object/public/meal-photos/"+path;
-  // 테스트 모드: 무조건 인증 성공 처리
   const earned=50;
   await fetch(SB+"/rest/v1/meal_logs",{method:"POST",headers:Object.assign({},H(),{Prefer:"return=representation"}),body:JSON.stringify({user_id:UID,menu_name:UMENU,photo_url:photoUrl,ai_verified:true,points_earned:earned})});
   const np=(PRF.points||0)+earned;
@@ -253,14 +639,46 @@ async function loadLogs(){
   try{
     const data=await sbGet("/rest/v1/meal_logs?user_id=eq."+UID+"&order=created_at.desc&limit=20");
     const el=document.getElementById("log-list");
-    if(!Array.isArray(data)||!data.length){el.innerHTML='<div style="text-align:center;padding:60px 0;color:#707070"><div style="font-size:40px;margin-bottom:10px">🍽️</div>아직 기록이 없어요</div>';return;}
-    el.innerHTML=data.map(function(l){return '<div class="card"><div style="display:flex;justify-content:space-between"><div><div style="font-weight:600">'+l.menu_name+'</div><div style="color:#707070;font-size:12px;margin-top:3px">'+new Date(l.created_at).toLocaleDateString("ko-KR")+'</div></div><div style="text-align:right"><div style="color:'+(l.ai_verified?"#c8f135":"#ff4d4d")+';font-size:13px;font-weight:600">'+(l.ai_verified?"✅ 인증":"❌ 미인증")+'</div>'+(l.points_earned>0?'<div style="color:#c8f135;font-size:12px">+'+l.points_earned+'P</div>':"")+'</div></div>'+(l.photo_url?'<img src="'+l.photo_url+'" style="width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover">':"")+' </div>';}).join("");
+    if(!Array.isArray(data)||!data.length){
+      el.innerHTML='<div style="text-align:center;padding:60px 0;color:var(--gray)"><div style="font-size:48px;margin-bottom:12px">🍽️</div><div style="font-size:15px;font-weight:600;margin-bottom:4px">아직 기록이 없어요</div><div style="font-size:13px">메뉴를 추천받고 사진을 올려봐요!</div></div>';
+      return;
+    }
+    el.innerHTML=data.map(function(l){
+      return '<div class="log-item">'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+          '<div><div style="font-weight:700;font-size:15px;margin-bottom:4px">'+l.menu_name+'</div>'+
+          '<div style="color:var(--gray);font-size:12px">'+new Date(l.created_at).toLocaleDateString("ko-KR")+'</div></div>'+
+          '<div style="text-align:right">'+
+            '<div style="color:'+(l.ai_verified?"var(--green)":"#EF4444")+';font-size:13px;font-weight:700">'+(l.ai_verified?"✅ 인증":"❌ 미인증")+'</div>'+
+            (l.points_earned>0?'<div style="color:var(--orange);font-size:12px;font-weight:700">+'+l.points_earned+'P</div>':"")+'</div>'+
+        '</div>'+
+        (l.photo_url?'<img src="'+l.photo_url+'" style="width:100%;border-radius:10px;margin-top:12px;max-height:200px;object-fit:cover">':"")+
+      '</div>';
+    }).join("");
   }catch(e){}
 }
 
 function renderPV(){
   const p=PRF||{};
-  document.getElementById("pv-content").innerHTML='<div class="card"><div style="color:#c8f135;font-weight:700;font-size:20px;margin-bottom:4px">'+(p.nickname||"사용자")+'</div><div style="color:#707070;font-size:13px;margin-bottom:16px">'+(UEMAIL||"")+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+[["성별",p.gender],["나이대",p.age_group],["직업",p.job],["지역",p.region],["식단조건",p.diet_condition],["총 포인트","🪙 "+(p.points||0)+"P"]].map(function(a){return '<div style="background:#0d0d0d;border-radius:10px;padding:10px 12px"><div style="color:#707070;font-size:11px">'+a[0]+'</div><div style="color:'+(a[0]==="총 포인트"?"#c8f135":"#f0f0f0")+';font-weight:600;font-size:14px">'+(a[1]||"-")+'</div></div>';}).join("")+'</div></div><div class="card"><div style="font-weight:600;margin-bottom:8px">못 먹는 음식</div><div style="margin-bottom:14px">'+(p.cannot_eat&&p.cannot_eat.length?p.cannot_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070'>없음</span>")+'</div><div style="font-weight:600;margin-bottom:8px">싫어하는 음식</div><div>'+(p.dislike_eat&&p.dislike_eat.length?p.dislike_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070'>없음</span>")+'</div></div>';
+  document.getElementById("pv-content").innerHTML=
+    '<div class="card" style="background:linear-gradient(135deg,var(--orange),var(--yellow));border:none;margin-bottom:16px">'+
+      '<div style="color:rgba(255,255,255,0.85);font-size:13px;margin-bottom:4px">환영해요!</div>'+
+      '<div style="color:#fff;font-weight:700;font-size:22px;margin-bottom:4px">'+(p.nickname||"사용자")+'</div>'+
+      '<div style="color:rgba(255,255,255,0.8);font-size:13px">'+(UEMAIL||"")+'</div>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">'+
+      [["성별",p.gender],["나이대",p.age_group],["직업",p.job],["지역",p.region],
+       ["식단조건",p.diet_condition],["총 포인트","🪙 "+(p.points||0)+"P"]].map(function(a){
+        return '<div class="pv-stat"><div class="pv-stat-label">'+a[0]+'</div>'+
+          '<div class="pv-stat-value" style="color:'+(a[0]==="총 포인트"?"var(--orange)":"var(--text)")+'">'+(a[1]||"-")+'</div></div>';
+      }).join("")+
+    '</div>'+
+    '<div class="card">'+
+      '<div style="font-weight:700;font-size:14px;margin-bottom:10px">🚫 못 먹는 음식</div>'+
+      '<div style="margin-bottom:16px">'+(p.cannot_eat&&p.cannot_eat.length?p.cannot_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:var(--gray);font-size:13px'>없음</span>")+'</div>'+
+      '<div style="font-weight:700;font-size:14px;margin-bottom:10px">😕 싫어하는 음식</div>'+
+      '<div>'+(p.dislike_eat&&p.dislike_eat.length?p.dislike_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:var(--gray);font-size:13px'>없음</span>")+'</div>'+
+    '</div>';
 }
 
 function doLogout(){TK=null;UID=null;UEMAIL=null;PRF=null;localStorage.removeItem("ms");page("page-auth");}
