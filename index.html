@@ -4,61 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>오늘 뭐 먹지?</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0d0d0d;color:#f0f0f0;font-family:'DM Sans','Noto Sans KR',sans-serif;min-height:100vh}
+body{background:#0d0d0d;color:#f0f0f0;font-family:'Noto Sans KR',sans-serif;min-height:100vh}
 input,button{font-family:inherit}
-.chip{padding:7px 14px;border-radius:999px;border:1.5px solid #2a2a2a;background:transparent;color:#707070;font-size:13px;cursor:pointer;transition:all .15s;margin:3px}
+.chip{padding:7px 14px;border-radius:999px;border:1.5px solid #2a2a2a;background:transparent;color:#707070;font-size:13px;cursor:pointer;margin:3px}
 .chip.on{background:#c8f135;border-color:#c8f135;color:#000;font-weight:700}
 .btn{width:100%;padding:14px;border-radius:12px;background:#c8f135;color:#000;border:none;font-size:15px;font-weight:700;cursor:pointer}
-.btn:disabled{background:#2a2a2a;color:#707070;cursor:not-allowed}
+.btn:disabled{background:#333;color:#666;cursor:not-allowed}
 .inp{width:100%;padding:12px 14px;border-radius:10px;background:#1e1e1e;border:1px solid #2a2a2a;color:#f0f0f0;font-size:15px;outline:none;margin-bottom:14px}
 .card{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:16px;padding:18px;margin-bottom:10px}
 .tag{background:rgba(200,241,53,.12);border:1px solid rgba(200,241,53,.2);border-radius:999px;padding:4px 10px;color:#c8f135;font-size:12px;display:inline-block;margin:2px}
-.screen{display:none}
-.screen.active{display:block}
-.tab{flex:1;padding:10px;border-radius:10px;background:#1e1e1e;border:1px solid #2a2a2a;color:#707070;font-size:13px}
+.hidden{display:none}
+.tab{flex:1;padding:10px;border-radius:10px;background:#1e1e1e;border:1px solid #2a2a2a;color:#707070;font-size:13px;cursor:pointer}
 .tab.on{background:#c8f135;border-color:#c8f135;color:#000;font-weight:700}
-.stitle{font-size:12px;font-weight:600;color:#707070;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
 </style>
 </head>
 <body>
-<div id="s-auth" class="screen active" style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 24px">
-  <div style="max-width:400px;margin:0 auto;width:100%">
-    <div style="text-align:center;margin-bottom:48px">
-      <div style="font-size:52px;margin-bottom:12px">🍽️</div>
-      <div style="font-size:28px;font-weight:700;color:#c8f135;letter-spacing:-1px">오늘 뭐 먹지?</div>
-      <div style="color:#707070;font-size:14px;margin-top:6px">AI 맞춤 메뉴 추천 서비스</div>
+
+<div id="page-auth">
+  <div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 24px">
+    <div style="max-width:400px;margin:0 auto;width:100%">
+      <div style="text-align:center;margin-bottom:48px">
+        <div style="font-size:52px;margin-bottom:12px">🍽️</div>
+        <div style="font-size:28px;font-weight:700;color:#c8f135">오늘 뭐 먹지?</div>
+        <div style="color:#707070;font-size:14px;margin-top:6px">AI 맞춤 메뉴 추천 서비스</div>
+      </div>
+      <div style="display:flex;background:#1e1e1e;border-radius:12px;padding:4px;margin-bottom:24px">
+        <button onclick="setMode('login')" id="btn-mode-login" class="tab on">로그인</button>
+        <button onclick="setMode('signup')" id="btn-mode-signup" class="tab">회원가입</button>
+      </div>
+      <div id="nick-wrap" class="hidden"><input id="inp-nick" class="inp" placeholder="닉네임"></div>
+      <input id="inp-email" class="inp" type="email" placeholder="이메일">
+      <input id="inp-pw" class="inp" type="password" placeholder="비밀번호 (6자 이상)">
+      <div id="auth-msg" style="color:#ff8080;font-size:13px;text-align:center;margin-bottom:12px;min-height:20px"></div>
+      <button id="auth-btn" class="btn" onclick="doAuth()">로그인</button>
     </div>
-    <div style="display:flex;background:#1e1e1e;border-radius:12px;padding:4px;margin-bottom:24px">
-      <button onclick="setMode('login')" id="tab-login" class="tab on">로그인</button>
-      <button onclick="setMode('signup')" id="tab-signup" class="tab">회원가입</button>
-    </div>
-    <div id="nick-wrap" style="display:none"><input id="inp-nick" class="inp" placeholder="닉네임"></div>
-    <input id="inp-email" class="inp" type="email" placeholder="이메일">
-    <input id="inp-pw" class="inp" type="password" placeholder="비밀번호 (6자 이상)">
-    <div id="auth-msg" style="color:#ff8080;font-size:13px;text-align:center;margin-bottom:12px;min-height:20px"></div>
-    <button id="auth-btn" class="btn" onclick="handleAuth()">로그인</button>
   </div>
 </div>
-<div id="s-profile" class="screen" style="padding-bottom:60px">
+
+<div id="page-profile" class="hidden" style="padding-bottom:60px">
   <div style="background:#161616;border-bottom:1px solid #2a2a2a;padding:16px 20px;position:sticky;top:0;z-index:10">
     <span style="color:#c8f135;font-weight:700;font-size:17px">👤 프로필 설정</span>
   </div>
   <div style="max-width:480px;margin:0 auto;padding:24px 20px">
     <p style="color:#707070;font-size:14px;margin-bottom:28px">한 번만 설정하면 매번 맞춤 추천을 받을 수 있어요</p>
-    <div class="stitle">성별</div><div id="g-gender" style="margin-bottom:20px"></div>
-    <div class="stitle">나이대</div><div id="g-age" style="margin-bottom:20px"></div>
-    <div class="stitle">직업</div><div id="g-job" style="margin-bottom:20px"></div>
-    <div class="stitle">지역</div><div id="g-region" style="margin-bottom:20px"></div>
-    <div class="stitle">못 먹는 음식 (복수선택)</div><div id="g-cannot" style="margin-bottom:20px"></div>
-    <div class="stitle">싫어하는 음식 (복수선택)</div><div id="g-dislike" style="margin-bottom:20px"></div>
-    <div class="stitle">식단 조건</div><div id="g-diet" style="margin-bottom:24px"></div>
-    <button class="btn" onclick="saveProfile()">저장하고 시작하기 →</button>
+    <div style="font-size:12px;color:#707070;margin-bottom:8px">성별</div><div id="g-gender" style="margin-bottom:20px"></div>
+    <div style="font-size:12px;color:#707070;margin-bottom:8px">나이대</div><div id="g-age" style="margin-bottom:20px"></div>
+    <div style="font-size:12px;color:#707070;margin-bottom:8px">직업</div><div id="g-job" style="margin-bottom:20px"></div>
+    <div style="font-size:12px;color:#707070;margin-bottom:8px">지역</div><div id="g-region" style="margin-bottom:20px"></div>
+    <div style="font-size:12px;color:#707070;margin-bottom:8px">못 먹는 음식 (복수선택)</div><div id="g-cannot" style="margin-bottom:20px"></div>
+    <div style="font-size:12px;color:#707070;margin-bottom:8px">싫어하는 음식 (복수선택)</div><div id="g-dislike" style="margin-bottom:20px"></div>
+    <div style="font-size:12px;color:#707070;margin-bottom:8px">식단 조건</div><div id="g-diet" style="margin-bottom:24px"></div>
+    <button class="btn" onclick="doSaveProfile()">저장하고 시작하기 →</button>
   </div>
 </div>
-<div id="s-home" class="screen" style="padding-bottom:80px">
+
+<div id="page-home" class="hidden" style="padding-bottom:80px">
   <div style="background:#161616;border-bottom:1px solid #2a2a2a;padding:14px 20px;position:sticky;top:0;z-index:10">
     <div style="max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center">
       <div>
@@ -66,36 +69,79 @@ input,button{font-family:inherit}
         <div id="h-nick" style="color:#707070;font-size:11px"></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
-        <div id="h-points" style="background:rgba(200,241,53,.12);border:1px solid #c8f135;border-radius:20px;padding:4px 12px;color:#c8f135;font-size:13px;font-weight:700">🪙 0P</div>
-        <button onclick="logout()" style="background:none;border:none;color:#707070;font-size:12px">로그아웃</button>
+        <div id="h-pts" style="background:rgba(200,241,53,.12);border:1px solid #c8f135;border-radius:20px;padding:4px 12px;color:#c8f135;font-size:13px;font-weight:700">🪙 0P</div>
+        <button onclick="doLogout()" style="background:none;border:none;color:#707070;font-size:12px;cursor:pointer">로그아웃</button>
       </div>
     </div>
   </div>
   <div style="max-width:480px;margin:0 auto;padding:0 20px">
     <div style="display:flex;gap:4px;padding:14px 0 8px">
-      <button class="tab on" onclick="showTab('recommend',this)">🤖 추천</button>
+      <button class="tab on" onclick="showTab('rec',this)">🤖 추천</button>
       <button class="tab" onclick="showTab('log',this)">📋 기록</button>
-      <button class="tab" onclick="showTab('pview',this)">👤 프로필</button>
+      <button class="tab" onclick="showTab('pv',this)">👤 프로필</button>
     </div>
-    <div id="tab-recommend">
+    <div id="tab-rec">
       <div class="card" style="margin-bottom:14px">
         <div style="color:#707070;font-size:13px;margin-bottom:10px">오늘 날씨가 어때요?</div>
         <div id="g-weather"></div>
       </div>
-      <button class="btn" id="btn-rec" onclick="getRecommendation()">🍴 맞춤 메뉴 추천받기</button>
-      <div id="result-area" style="margin-top:18px"></div>
+      <button class="btn" id="btn-rec" onclick="doRec()">🍴 맞춤 메뉴 추천받기</button>
+      <div id="rec-result" style="margin-top:18px"></div>
     </div>
-    <div id="tab-log" style="display:none"><div id="log-list"></div></div>
-    <div id="tab-pview" style="display:none"><div id="pview-content"></div></div>
+    <div id="tab-log" class="hidden"><div id="log-list"></div></div>
+    <div id="tab-pv" class="hidden"><div id="pv-content"></div></div>
   </div>
 </div>
-<input type="file" id="file-input" accept="image/*" style="display:none" onchange="handlePhoto(event)">
+
+<input type="file" id="file-inp" accept="image/*" style="display:none" onchange="doPhoto(event)">
+
 <script>
 const SB="https://ezhxmpiljkhnprepnhba.supabase.co";
-const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6aHhtcGlsamtobnByZXBuaGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMDkwMTAsImV4cCI6MjA5Mzc4NTAxMH0.PkwFl3gqafYUzvmYk9yENSWx8JuMQUGIUnu8cLWNt6Y";
-let TK=null,USR=null,PRF=null,UMENU=null;
-const H=()=>({apikey:KEY,Authorization:`Bearer ${TK}`,"Content-Type":"application/json"});
-const api=async(url,opt={})=>{const r=await fetch(url,opt);return r.json()};
+const AK="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6aHhtcGlsamtobnByZXBuaGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMDkwMTAsImV4cCI6MjA5Mzc4NTAxMH0.PkwFl3gqafYUzvmYk9yENSWx8JuMQUGIUnu8cLWNt6Y";
+let TK=null,UID=null,UEMAIL=null,PRF=null,UMENU=null,MODE="login";
+
+function page(id){
+  ["page-auth","page-profile","page-home"].forEach(p=>{
+    const el=document.getElementById(p);
+    if(el){el.style.display=(p===id)?"block":"none";}
+  });
+}
+
+function H(){return{apikey:AK,Authorization:"Bearer "+TK,"Content-Type":"application/json"};}
+
+async function sbGet(path){
+  const r=await fetch(SB+path,{headers:H()});
+  return r.json();
+}
+async function sbPost(path,body,extra){
+  const h=Object.assign({},H(),extra||{});
+  const r=await fetch(SB+path,{method:"POST",headers:h,body:JSON.stringify(body)});
+  return r.json();
+}
+async function sbPatch(path,body){
+  const r=await fetch(SB+path,{method:"PATCH",headers:H(),body:JSON.stringify(body)});
+  return r.json();
+}
+
+function chips(id,items,field,multi){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.innerHTML="";
+  items.forEach(function(v){
+    const b=document.createElement("button");
+    b.className="chip"+(multi?(SEL[field].indexOf(v)>=0):(SEL[field]===v)?" on":"");
+    b.textContent=v;
+    b.onclick=function(){
+      if(multi){
+        const i=SEL[field].indexOf(v);
+        if(i>=0)SEL[field].splice(i,1);else SEL[field].push(v);
+      } else {SEL[field]=v;}
+      chips(id,items,field,multi);
+    };
+    el.appendChild(b);
+  });
+}
+
 const REGIONS=["서울","경기 북부","경기 남부","인천","강원","충북","충남","대전","세종","전북","전남","광주","경북","경남","대구","울산","부산","제주"];
 const JOBS=["직장인","학생","자영업자","주부","프리랜서","무직","기타"];
 const AGES=["10대","20대","30대","40대","50대","60대 이상"];
@@ -103,195 +149,175 @@ const DIETS=["없음","단백질 위주","채소 위주","저탄수화물","저�
 const CANNOT=["돼지고기","소고기","닭고기","해산물","유제품","글루텐","견과류","달걀","없음"];
 const DISLIKE=["매운 음식","단 음식","짠 음식","기름진 음식","날 것","향신료","없음"];
 const WEATHER=["☀️ 맑음","🌧️ 비","❄️ 눈","🌫️ 흐림","🌬️ 바람","🌡️ 더위","🥶 추위"];
-const S={gender:"",age:"",job:"",region:"",cannot:[],dislike:[],diet:"없음",weather:""};
-function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active")}
-function chips(id,items,field,multi=false){
-  const el=document.getElementById(id);el.innerHTML="";
-  items.forEach(v=>{
-    const b=document.createElement("button");b.className="chip";
-    b.textContent=v;
-    if(multi?S[field].includes(v):S[field]===v)b.classList.add("on");
-    b.onclick=()=>{
-      if(multi){S[field].includes(v)?S[field].splice(S[field].indexOf(v),1):S[field].push(v)}
-      else S[field]=v;
-      chips(id,items,field,multi);
-    };
-    el.appendChild(b);
-  });
-}
-let MODE="login";
+const SEL={gender:"",age:"",job:"",region:"",cannot:[],dislike:[],diet:"없음",weather:""};
+
 function setMode(m){
   MODE=m;
-  document.getElementById("tab-login").className="tab"+(m==="login"?" on":"");
-  document.getElementById("tab-signup").className="tab"+(m==="signup"?" on":"");
+  document.getElementById("btn-mode-login").className="tab"+(m==="login"?" on":"");
+  document.getElementById("btn-mode-signup").className="tab"+(m==="signup"?" on":"");
   document.getElementById("nick-wrap").style.display=m==="signup"?"block":"none";
   document.getElementById("auth-btn").textContent=m==="login"?"로그인":"가입하기";
 }
-async function handleAuth(){
+
+async function doAuth(){
   const email=document.getElementById("inp-email").value.trim();
   const pw=document.getElementById("inp-pw").value;
   const msg=document.getElementById("auth-msg");
-  if(!email||!pw){msg.textContent="이메일과 비밀번호를 입력해주세요";return}
   const btn=document.getElementById("auth-btn");
+  if(!email||!pw){msg.textContent="이메일과 비밀번호를 입력해주세요";return;}
   btn.textContent="처리 중...";btn.disabled=true;msg.textContent="";
   try{
     if(MODE==="signup"){
       const nick=document.getElementById("inp-nick").value||"사용자";
-      const d=await api(`${SB}/auth/v1/signup`,{method:"POST",headers:{"Content-Type":"application/json",apikey:KEY},body:JSON.stringify({email,password:pw})});
-      if(d.error){msg.textContent=d.error.message||"가입 실패";return}
-      const login=await api(`${SB}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"Content-Type":"application/json",apikey:KEY},body:JSON.stringify({email,password:pw})});
-      if(!login.access_token){msg.textContent="로그인 실패. 다시 시도해주세요";return}
-      TK=login.access_token;USR=login.user;
-      await api(`${SB}/rest/v1/profiles`,{method:"POST",headers:{...H(),Prefer:"return=representation"},body:JSON.stringify({id:USR.id,email,nickname:nick,points:0})});
-      localStorage.setItem("meal_session",JSON.stringify({token:TK,userId:USR.id,email}));
-      initProfileSetup();show("s-profile");
-    }else{
-      const login=await api(`${SB}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"Content-Type":"application/json",apikey:KEY},body:JSON.stringify({email,password:pw})});
-      if(!login.access_token){msg.textContent=login.error_description||"로그인 실패";return}
-      TK=login.access_token;USR=login.user;
-      localStorage.setItem("meal_session",JSON.stringify({token:TK,userId:USR.id,email}));
-      const profiles=await api(`${SB}/rest/v1/profiles?id=eq.${USR.id}`,{headers:H()});
-      PRF=Array.isArray(profiles)&&profiles[0]?profiles[0]:null;
-      if(PRF&&PRF.gender){initHome();show("s-home")}
-      else{initProfileSetup();show("s-profile")}
+      const su=await fetch(SB+"/auth/v1/signup",{method:"POST",headers:{"Content-Type":"application/json",apikey:AK},body:JSON.stringify({email:email,password:pw})});
+      const sd=await su.json();
+      if(sd.error){msg.textContent=sd.error.message||"가입 실패";return;}
+      const li=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"Content-Type":"application/json",apikey:AK},body:JSON.stringify({email:email,password:pw})});
+      const ld=await li.json();
+      if(!ld.access_token){msg.textContent="로그인 실패. 다시 시도해주세요";return;}
+      TK=ld.access_token;UID=ld.user.id;UEMAIL=email;
+      await fetch(SB+"/rest/v1/profiles",{method:"POST",headers:Object.assign({},H(),{Prefer:"return=representation"}),body:JSON.stringify({id:UID,email:email,nickname:nick,points:0})});
+      localStorage.setItem("ms",JSON.stringify({t:TK,u:UID,e:email}));
+      initProfile();page("page-profile");
+    } else {
+      const li=await fetch(SB+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"Content-Type":"application/json",apikey:AK},body:JSON.stringify({email:email,password:pw})});
+      const ld=await li.json();
+      if(!ld.access_token){msg.textContent=ld.error_description||ld.msg||"로그인 실패";return;}
+      TK=ld.access_token;UID=ld.user.id;UEMAIL=email;
+      localStorage.setItem("ms",JSON.stringify({t:TK,u:UID,e:email}));
+      const pd=await sbGet("/rest/v1/profiles?id=eq."+UID);
+      if(Array.isArray(pd)&&pd[0]){
+        PRF=pd[0];
+        if(PRF.gender){initHome();page("page-home");}
+        else{initProfile();page("page-profile");}
+      } else {initProfile();page("page-profile");}
     }
-  }catch(e){msg.textContent="오류: "+e.message}
-  finally{btn.textContent=MODE==="login"?"로그인":"가입하기";btn.disabled=false}
+  }catch(e){msg.textContent="오류: "+e.message;}
+  finally{btn.textContent=MODE==="login"?"로그인":"가입하기";btn.disabled=false;}
 }
-function initProfileSetup(){
-  chips("g-gender",["남성","여성"],"gender");
-  chips("g-age",AGES,"age");chips("g-job",JOBS,"job");
-  chips("g-region",REGIONS,"region");
+
+function initProfile(){
+  chips("g-gender",["남성","여성"],"gender",false);
+  chips("g-age",AGES,"age",false);
+  chips("g-job",JOBS,"job",false);
+  chips("g-region",REGIONS,"region",false);
   chips("g-cannot",CANNOT,"cannot",true);
   chips("g-dislike",DISLIKE,"dislike",true);
-  chips("g-diet",DIETS,"diet");
+  chips("g-diet",DIETS,"diet",false);
 }
-async function saveProfile(){
-  if(!S.gender||!S.age||!S.job||!S.region){alert("성별, 나이대, 직업, 지역은 필수예요!");return}
-  await api(`${SB}/rest/v1/profiles`,{method:"POST",headers:{...H(),Prefer:"resolution=merge-duplicates"},body:JSON.stringify({id:USR.id,gender:S.gender,age_group:S.age,job:S.job,region:S.region,cannot_eat:S.cannot,dislike_eat:S.dislike,diet_condition:S.diet})});
-  const p=await api(`${SB}/rest/v1/profiles?id=eq.${USR.id}`,{headers:H()});
-  PRF=p[0];initHome();show("s-home");
+
+async function doSaveProfile(){
+  if(!SEL.gender||!SEL.age||!SEL.job||!SEL.region){alert("성별, 나이대, 직업, 지역은 필수예요!");return;}
+  await fetch(SB+"/rest/v1/profiles",{method:"POST",headers:Object.assign({},H(),{Prefer:"resolution=merge-duplicates"}),body:JSON.stringify({id:UID,gender:SEL.gender,age_group:SEL.age,job:SEL.job,region:SEL.region,cannot_eat:SEL.cannot,dislike_eat:SEL.dislike,diet_condition:SEL.diet})});
+  const pd=await sbGet("/rest/v1/profiles?id=eq."+UID);
+  PRF=pd[0];initHome();page("page-home");
 }
+
 function initHome(){
-  document.getElementById("h-nick").textContent=PRF?.nickname||USR?.email||"";
-  document.getElementById("h-points").textContent="🪙 "+(PRF?.points||0)+"P";
-  chips("g-weather",WEATHER,"weather");
-  loadLogs();renderPView();
+  document.getElementById("h-nick").textContent=PRF&&PRF.nickname?PRF.nickname:UEMAIL;
+  document.getElementById("h-pts").textContent="🪙 "+(PRF&&PRF.points?PRF.points:0)+"P";
+  chips("g-weather",WEATHER,"weather",false);
+  loadLogs();renderPV();
 }
+
 function showTab(name,btn){
-  ["recommend","log","pview"].forEach(t=>{const el=document.getElementById("tab-"+t);if(el)el.style.display="none"});
-  document.getElementById("tab-"+name).style.display="block";
-  document.querySelectorAll("#s-home .tab").forEach(b=>b.className="tab");
+  ["rec","log","pv"].forEach(function(t){
+    const el=document.getElementById("tab-"+t);
+    if(el)el.style.display=(t===name)?"block":"none";
+  });
+  document.querySelectorAll("#page-home .tab").forEach(function(b){b.className="tab";});
   btn.className="tab on";
   if(name==="log")loadLogs();
 }
-async function getRecommendation(){
-  if(!S.weather){alert("날씨를 선택해주세요!");return}
+
+async function doRec(){
+  if(!SEL.weather){alert("날씨를 선택해주세요!");return;}
   const btn=document.getElementById("btn-rec");
   btn.textContent="🤔 AI 분석 중...";btn.disabled=true;
-  document.getElementById("result-area").innerHTML="";
-  const prompt=`당신은 한국 식문화 전문가입니다.
-사용자: 성별 ${PRF.gender}, ${PRF.age_group}, ${PRF.job}, ${PRF.region}, 날씨 ${S.weather}
-못먹는것: ${(PRF.cannot_eat||[]).join(",")||"없음"}, 싫어하는것: ${(PRF.dislike_eat||[]).join(",")||"없음"}, 식단: ${PRF.diet_condition||"없음"}
-JSON으로만 응답: {"menu":"메뉴명","emoji":"이모지","reason":"추천이유3문장","recipe":{"time":"시간","difficulty":"쉬움/보통/어려움","steps":["1","2","3","4"]},"ingredients":[{"name":"재료","amount":"양","keyword":"쿠팡검색어"}],"pairing":"페어링","alternatives":["대안1","대안2"]}`;
+  document.getElementById("rec-result").innerHTML="";
+  const cannot=(PRF&&PRF.cannot_eat)?PRF.cannot_eat.join(","):"없음";
+  const dislike=(PRF&&PRF.dislike_eat)?PRF.dislike_eat.join(","):"없음";
+  const prompt="당신은 한국 식문화 전문가입니다.\n사용자: 성별 "+(PRF?PRF.gender:"")+", "+(PRF?PRF.age_group:"")+", "+(PRF?PRF.job:"")+", "+(PRF?PRF.region:"")+", 날씨 "+SEL.weather+"\n못먹는것: "+cannot+", 싫어하는것: "+dislike+", 식단: "+(PRF?PRF.diet_condition:"없음")+"\nJSON으로만 응답: {\"menu\":\"메뉴명\",\"emoji\":\"이모지\",\"reason\":\"추천이유3문장\",\"recipe\":{\"time\":\"시간\",\"difficulty\":\"쉬움/보통/어려움\",\"steps\":[\"1\",\"2\",\"3\",\"4\"]},\"ingredients\":[{\"name\":\"재료\",\"amount\":\"양\",\"keyword\":\"쿠팡검색어\"}],\"pairing\":\"페어링\",\"alternatives\":[\"대안1\",\"대안2\"]}";
   try{
     const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})});
     const data=await res.json();
-    const text=data.content.map(i=>i.text||"").join("");
-    renderResult(JSON.parse(text.replace(/```json|```/g,"").trim()));
-  }catch(e){alert("오류: "+e.message)}
+    const text=data.content.map(function(i){return i.text||"";}).join("");
+    const r=JSON.parse(text.replace(/```json|```/g,"").trim());
+    renderRec(r);
+  }catch(e){alert("오류: "+e.message);}
   btn.textContent="🍴 맞춤 메뉴 추천받기";btn.disabled=false;
 }
-function renderResult(r){
-  const steps=r.recipe.steps.map((s,i)=>`<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:rgba(200,241,53,.12);border:1px solid #c8f135;color:#c8f135;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div><div style="color:#f0f0f0;font-size:14px;line-height:1.6;padding-top:2px">${s}</div></div>`).join("");
-  const ings=r.ingredients.map(g=>`<a href="https://www.coupang.com/np/search?q=${encodeURIComponent(g.keyword)}" target="_blank" style="display:flex;justify-content:space-between;padding:10px 12px;border-radius:9px;background:#0d0d0d;margin-bottom:6px;text-decoration:none"><div><div style="color:#f0f0f0;font-size:14px;font-weight:500">${g.name}</div><div style="color:#707070;font-size:12px">${g.amount}</div></div><div style="color:#c8f135;font-size:12px;align-self:center">구매 →</div></a>`).join("");
-  const alts=r.alternatives.map(a=>`<span class="tag">${a}</span>`).join("");
-  document.getElementById("result-area").innerHTML=`
-    <div style="background:#161616;border:1px solid #c8f135;border-radius:20px;padding:22px;margin-bottom:10px">
-      <div style="font-size:44px;margin-bottom:6px">${r.emoji}</div>
-      <div style="font-size:24px;font-weight:700;margin-bottom:8px">${r.menu}</div>
-      <p style="color:#707070;font-size:14px;line-height:1.7;margin:0 0 14px">${r.reason}</p>
-      <span class="tag">⏱ ${r.recipe.time}</span>
-      <span class="tag">📊 ${r.recipe.difficulty}</span>
-      <span class="tag">🥂 ${r.pairing}</span>
-    </div>
-    <div class="card"><div style="font-weight:600;margin-bottom:12px">📋 레시피</div>${steps}</div>
-    <div class="card"><div style="font-weight:600;margin-bottom:12px">🛒 재료 구매 (클릭 → 쿠팡)</div>${ings}</div>
-    <div class="card"><div style="font-weight:600;margin-bottom:8px">🔄 다른 추천</div>${alts}</div>
-    <div class="card" style="text-align:center">
-      <div style="font-size:28px;margin-bottom:6px">📸</div>
-      <div style="font-weight:600;margin-bottom:4px">먹은 사진 인증하고 +50P!</div>
-      <div style="color:#707070;font-size:13px;margin-bottom:14px">AI가 사진을 확인하고 포인트를 드려요</div>
-      <button class="btn" onclick="startUpload('${r.menu.replace(/'/g,"\\'")}')">📷 사진 업로드</button>
-    </div>`;
+
+function renderRec(r){
+  const steps=r.recipe.steps.map(function(s,i){return '<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:rgba(200,241,53,.12);border:1px solid #c8f135;color:#c8f135;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">'+(i+1)+'</div><div style="color:#f0f0f0;font-size:14px;line-height:1.6;padding-top:2px">'+s+'</div></div>';}).join("");
+  const ings=r.ingredients.map(function(g){return '<a href="https://www.coupang.com/np/search?q='+encodeURIComponent(g.keyword)+'" target="_blank" style="display:flex;justify-content:space-between;padding:10px 12px;border-radius:9px;background:#0d0d0d;margin-bottom:6px;text-decoration:none"><div><div style="color:#f0f0f0;font-size:14px;font-weight:500">'+g.name+'</div><div style="color:#707070;font-size:12px">'+g.amount+'</div></div><div style="color:#c8f135;font-size:12px;align-self:center">구매 →</div></a>';}).join("");
+  const alts=r.alternatives.map(function(a){return '<span class="tag">'+a+'</span>';}).join("");
+  const menu=r.menu.replace(/'/g,"\\'");
+  document.getElementById("rec-result").innerHTML='<div style="background:#161616;border:1px solid #c8f135;border-radius:20px;padding:22px;margin-bottom:10px"><div style="font-size:44px;margin-bottom:6px">'+r.emoji+'</div><div style="font-size:24px;font-weight:700;margin-bottom:8px">'+r.menu+'</div><p style="color:#707070;font-size:14px;line-height:1.7;margin:0 0 14px">'+r.reason+'</p><span class="tag">⏱ '+r.recipe.time+'</span><span class="tag">📊 '+r.recipe.difficulty+'</span><span class="tag">🥂 '+r.pairing+'</span></div><div class="card"><div style="font-weight:600;margin-bottom:12px">📋 레시피</div>'+steps+'</div><div class="card"><div style="font-weight:600;margin-bottom:12px">🛒 재료 구매 (클릭→쿠팡)</div>'+ings+'</div><div class="card"><div style="font-weight:600;margin-bottom:8px">🔄 다른 추천</div>'+alts+'</div><div class="card" style="text-align:center"><div style="font-size:28px;margin-bottom:6px">📸</div><div style="font-weight:600;margin-bottom:4px">먹은 사진 인증하고 +50P!</div><div style="color:#707070;font-size:13px;margin-bottom:14px">AI가 사진을 확인하고 포인트를 드려요</div><button class="btn" onclick="startUpload(\''+menu+'\')">📷 사진 업로드</button></div>';
 }
-function startUpload(menu){UMENU=menu;document.getElementById("file-input").click()}
-async function handlePhoto(e){
+
+function startUpload(menu){UMENU=menu;document.getElementById("file-inp").click();}
+
+async function doPhoto(e){
   const file=e.target.files[0];if(!file||!UMENU)return;
   alert("AI가 사진 분석 중이에요. 잠시 기다려주세요...");
-  const path=`${USR.id}/${Date.now()}.jpg`;
-  await fetch(`${SB}/storage/v1/object/meal-photos/${path}`,{method:"POST",headers:{apikey:KEY,Authorization:`Bearer ${TK}`},body:file});
-  const photoUrl=`${SB}/storage/v1/object/public/meal-photos/${path}`;
+  const path=UID+"/"+Date.now()+".jpg";
+  await fetch(SB+"/storage/v1/object/meal-photos/"+path,{method:"POST",headers:{apikey:AK,Authorization:"Bearer "+TK},body:file});
+  const photoUrl=SB+"/storage/v1/object/public/meal-photos/"+path;
   const reader=new FileReader();
-  reader.onload=async(ev)=>{
+  reader.onload=async function(ev){
     const b64=ev.target.result.split(",")[1];
     try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}},{type:"text",text:`이 사진이 "${UMENU}"인지 확인. JSON만: {"match":true,"confidence":85,"detected":"음식명"}`}]}]})});
+      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}},{type:"text",text:"이 사진이 \""+UMENU+"\"인지 확인. JSON만: {\"match\":true,\"confidence\":85,\"detected\":\"음식명\"}"}]}]})});
       const ad=await res.json();
-      const v=JSON.parse(ad.content.map(i=>i.text||"").join("").replace(/```json|```/g,"").trim());
-      const earned=v.match&&v.confidence>=70?50:0;
-      await api(`${SB}/rest/v1/meal_logs`,{method:"POST",headers:{...H(),Prefer:"return=representation"},body:JSON.stringify({user_id:USR.id,menu_name:UMENU,photo_url:photoUrl,ai_verified:v.match,points_earned:earned})});
+      const v=JSON.parse(ad.content.map(function(i){return i.text||"";}).join("").replace(/```json|```/g,"").trim());
+      const earned=(v.match&&v.confidence>=70)?50:0;
+      await fetch(SB+"/rest/v1/meal_logs",{method:"POST",headers:Object.assign({},H(),{Prefer:"return=representation"}),body:JSON.stringify({user_id:UID,menu_name:UMENU,photo_url:photoUrl,ai_verified:v.match,points_earned:earned})});
       if(earned>0){
         const np=(PRF.points||0)+earned;
-        await api(`${SB}/rest/v1/profiles?id=eq.${USR.id}`,{method:"PATCH",headers:H(),body:JSON.stringify({points:np})});
-        PRF.points=np;document.getElementById("h-points").textContent="🪙 "+np+"P";
+        await fetch(SB+"/rest/v1/profiles?id=eq."+UID,{method:"PATCH",headers:H(),body:JSON.stringify({points:np})});
+        PRF.points=np;document.getElementById("h-pts").textContent="🪙 "+np+"P";
       }
-      alert(v.match?`✅ 인증 성공! +${earned}P 지급!`:`❌ 매칭 실패. 감지된 음식: "${v.detected}"`);
+      alert(v.match?"✅ 인증 성공! +"+earned+"P 지급!":"❌ 매칭 실패. 감지된 음식: \""+v.detected+"\"");
       loadLogs();
-    }catch(err){alert("분석 오류: "+err.message)}
+    }catch(err){alert("분석 오류: "+err.message);}
     UMENU=null;e.target.value="";
   };
   reader.readAsDataURL(file);
 }
+
 async function loadLogs(){
-  const data=await api(`${SB}/rest/v1/meal_logs?user_id=eq.${USR.id}&order=created_at.desc&limit=20`,{headers:H()});
+  const data=await sbGet("/rest/v1/meal_logs?user_id=eq."+UID+"&order=created_at.desc&limit=20");
   const el=document.getElementById("log-list");
-  if(!Array.isArray(data)||!data.length){el.innerHTML='<div style="text-align:center;padding:60px 0;color:#707070"><div style="font-size:40px;margin-bottom:10px">🍽️</div>아직 기록이 없어요</div>';return}
-  el.innerHTML=data.map(l=>`<div class="card"><div style="display:flex;justify-content:space-between"><div><div style="font-weight:600">${l.menu_name}</div><div style="color:#707070;font-size:12px;margin-top:3px">${new Date(l.created_at).toLocaleDateString("ko-KR")}</div></div><div style="text-align:right"><div style="color:${l.ai_verified?"#c8f135":"#ff4d4d"};font-size:13px;font-weight:600">${l.ai_verified?"✅ 인증":"❌ 미인증"}</div>${l.points_earned>0?`<div style="color:#c8f135;font-size:12px">+${l.points_earned}P</div>`:""}</div></div>${l.photo_url?`<img src="${l.photo_url}" style="width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover">`:""}}</div>`).join("");
+  if(!el)return;
+  if(!Array.isArray(data)||!data.length){el.innerHTML='<div style="text-align:center;padding:60px 0;color:#707070"><div style="font-size:40px;margin-bottom:10px">🍽️</div>아직 기록이 없어요</div>';return;}
+  el.innerHTML=data.map(function(l){return '<div class="card"><div style="display:flex;justify-content:space-between"><div><div style="font-weight:600">'+l.menu_name+'</div><div style="color:#707070;font-size:12px;margin-top:3px">'+new Date(l.created_at).toLocaleDateString("ko-KR")+'</div></div><div style="text-align:right"><div style="color:'+(l.ai_verified?"#c8f135":"#ff4d4d")+';font-size:13px;font-weight:600">'+(l.ai_verified?"✅ 인증":"❌ 미인증")+'</div>'+(l.points_earned>0?'<div style="color:#c8f135;font-size:12px">+'+l.points_earned+'P</div>':"")+'</div></div>'+(l.photo_url?'<img src="'+l.photo_url+'" style="width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover">':"")+' </div>';}).join("");
 }
-function renderPView(){
+
+function renderPV(){
   const p=PRF||{};
-  document.getElementById("pview-content").innerHTML=`
-    <div class="card">
-      <div style="color:#c8f135;font-weight:700;font-size:20px;margin-bottom:4px">${p.nickname||"사용자"}</div>
-      <div style="color:#707070;font-size:13px;margin-bottom:16px">${USR?.email||""}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        ${[["성별",p.gender],["나이대",p.age_group],["직업",p.job],["지역",p.region],["식단조건",p.diet_condition],["총 포인트","🪙 "+(p.points||0)+"P"]].map(([l,v])=>`<div style="background:#0d0d0d;border-radius:10px;padding:10px 12px"><div style="color:#707070;font-size:11px">${l}</div><div style="color:${l==="총 포인트"?"#c8f135":"#f0f0f0"};font-weight:600;font-size:14px">${v||"-"}</div></div>`).join("")}
-      </div>
-    </div>
-    <div class="card">
-      <div style="font-weight:600;margin-bottom:8px">못 먹는 음식</div>
-      <div style="margin-bottom:14px">${(p.cannot_eat||[]).map(f=>`<span class="tag">${f}</span>`).join("")||"<span style='color:#707070;font-size:13px'>없음</span>"}</div>
-      <div style="font-weight:600;margin-bottom:8px">싫어하는 음식</div>
-      <div>${(p.dislike_eat||[]).map(f=>`<span class="tag">${f}</span>`).join("")||"<span style='color:#707070;font-size:13px'>없음</span>"}</div>
-    </div>`;
+  document.getElementById("pv-content").innerHTML='<div class="card"><div style="color:#c8f135;font-weight:700;font-size:20px;margin-bottom:4px">'+(p.nickname||"사용자")+'</div><div style="color:#707070;font-size:13px;margin-bottom:16px">'+(UEMAIL||"")+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+[["성별",p.gender],["나이대",p.age_group],["직업",p.job],["지역",p.region],["식단조건",p.diet_condition],["총 포인트","🪙 "+(p.points||0)+"P"]].map(function(a){return '<div style="background:#0d0d0d;border-radius:10px;padding:10px 12px"><div style="color:#707070;font-size:11px">'+a[0]+'</div><div style="color:'+(a[0]==="총 포인트"?"#c8f135":"#f0f0f0")+';font-weight:600;font-size:14px">'+(a[1]||"-")+'</div></div>';}).join("")+'</div></div><div class="card"><div style="font-weight:600;margin-bottom:8px">못 먹는 음식</div><div style="margin-bottom:14px">'+(p.cannot_eat&&p.cannot_eat.length?p.cannot_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070;font-size:13px'>없음</span>")+'</div><div style="font-weight:600;margin-bottom:8px">싫어하는 음식</div><div>'+(p.dislike_eat&&p.dislike_eat.length?p.dislike_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070;font-size:13px'>없음</span>")+'</div></div>';
 }
-function logout(){TK=null;USR=null;PRF=null;localStorage.removeItem("meal_session");show("s-auth")}
-window.onload=async()=>{
+
+function doLogout(){TK=null;UID=null;UEMAIL=null;PRF=null;localStorage.removeItem("ms");page("page-auth");}
+
+window.onload=async function(){
+  page("page-auth");
   try{
-    const saved=localStorage.getItem("meal_session");
+    const saved=localStorage.getItem("ms");
     if(saved){
-      const {token,userId,email}=JSON.parse(saved);
-      TK=token;USR={id:userId,email};
-      const p=await api(`${SB}/rest/v1/profiles?id=eq.${userId}`,{headers:H()});
-      if(Array.isArray(p)&&p[0]){
-        PRF=p[0];
-        if(PRF.gender){initHome();show("s-home");return}
-        else{initProfileSetup();show("s-profile");return}
+      const s=JSON.parse(saved);
+      TK=s.t;UID=s.u;UEMAIL=s.e;
+      const pd=await sbGet("/rest/v1/profiles?id=eq."+UID);
+      if(Array.isArray(pd)&&pd[0]){
+        PRF=pd[0];
+        if(PRF.gender){initHome();page("page-home");}
+        else{initProfile();page("page-profile");}
+        return;
       }
     }
   }catch(e){}
-  show("s-auth");
+  page("page-auth");
 };
 </script>
 </body>
