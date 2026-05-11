@@ -16,7 +16,6 @@ input,button{font-family:inherit}
 .inp{width:100%;padding:12px 14px;border-radius:10px;background:#1e1e1e;border:1px solid #2a2a2a;color:#f0f0f0;font-size:15px;outline:none;margin-bottom:14px}
 .card{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:16px;padding:18px;margin-bottom:10px}
 .tag{background:rgba(200,241,53,.12);border:1px solid rgba(200,241,53,.2);border-radius:999px;padding:4px 10px;color:#c8f135;font-size:12px;display:inline-block;margin:2px}
-.hidden{display:none}
 .tab{flex:1;padding:10px;border-radius:10px;background:#1e1e1e;border:1px solid #2a2a2a;color:#707070;font-size:13px;cursor:pointer}
 .tab.on{background:#c8f135;border-color:#c8f135;color:#000;font-weight:700}
 </style>
@@ -35,7 +34,7 @@ input,button{font-family:inherit}
         <button onclick="setMode('login')" id="btn-mode-login" class="tab on">로그인</button>
         <button onclick="setMode('signup')" id="btn-mode-signup" class="tab">회원가입</button>
       </div>
-      <div id="nick-wrap" class="hidden"><input id="inp-nick" class="inp" placeholder="닉네임"></div>
+      <div id="nick-wrap" style="display:none"><input id="inp-nick" class="inp" placeholder="닉네임"></div>
       <input id="inp-email" class="inp" type="email" placeholder="이메일">
       <input id="inp-pw" class="inp" type="password" placeholder="비밀번호 (6자 이상)">
       <div id="auth-msg" style="color:#ff8080;font-size:13px;text-align:center;margin-bottom:12px;min-height:20px"></div>
@@ -44,7 +43,7 @@ input,button{font-family:inherit}
   </div>
 </div>
 
-<div id="page-profile" class="hidden" style="padding-bottom:60px">
+<div id="page-profile" style="display:none;padding-bottom:60px">
   <div style="background:#161616;border-bottom:1px solid #2a2a2a;padding:16px 20px;position:sticky;top:0;z-index:10">
     <span style="color:#c8f135;font-weight:700;font-size:17px">👤 프로필 설정</span>
   </div>
@@ -61,7 +60,7 @@ input,button{font-family:inherit}
   </div>
 </div>
 
-<div id="page-home" class="hidden" style="padding-bottom:80px">
+<div id="page-home" style="display:none;padding-bottom:80px">
   <div style="background:#161616;border-bottom:1px solid #2a2a2a;padding:14px 20px;position:sticky;top:0;z-index:10">
     <div style="max-width:480px;margin:0 auto;display:flex;justify-content:space-between;align-items:center">
       <div>
@@ -88,8 +87,8 @@ input,button{font-family:inherit}
       <button class="btn" id="btn-rec" onclick="doRec()">🍴 맞춤 메뉴 추천받기</button>
       <div id="rec-result" style="margin-top:18px"></div>
     </div>
-    <div id="tab-log" class="hidden"><div id="log-list"></div></div>
-    <div id="tab-pv" class="hidden"><div id="pv-content"></div></div>
+    <div id="tab-log" style="display:none"><div id="log-list"></div></div>
+    <div id="tab-pv" style="display:none"><div id="pv-content"></div></div>
   </div>
 </div>
 
@@ -100,47 +99,20 @@ const SB="https://ezhxmpiljkhnprepnhba.supabase.co";
 const AK="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6aHhtcGlsamtobnByZXBuaGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMDkwMTAsImV4cCI6MjA5Mzc4NTAxMH0.PkwFl3gqafYUzvmYk9yENSWx8JuMQUGIUnu8cLWNt6Y";
 let TK=null,UID=null,UEMAIL=null,PRF=null,UMENU=null,MODE="login";
 
+// 더미 메뉴 데이터 (API 없이 테스트용)
+const DUMMY_MENUS = [
+  {menu:"된장찌개",emoji:"🍲",reason:"비 오는 날 따뜻한 된장찌개는 몸을 녹여줘요. 직장인에게 영양 균형이 좋은 한식입니다. 인천 지역 식재료로 만들기 좋아요.",recipe:{time:"20분",difficulty:"쉬움",steps:["냄비에 물 500ml를 끓여요","된장 2큰술을 풀어줘요","두부, 호박, 버섯을 넣어요","파를 넣고 5분 더 끓이면 완성!"]},ingredients:[{name:"된장",amount:"2큰술",keyword:"샘표 된장"},{name:"두부",amount:"1/2모",keyword:"풀무원 두부"},{name:"애호박",amount:"1/4개",keyword:"애호박"},{name:"버섯",amount:"한줌",keyword:"표고버섯"}],pairing:"공깃밥 + 김치",alternatives:["김치찌개","순두부찌개"]},
+  {menu:"닭갈비",emoji:"🍗",reason:"단백질이 풍부해 직장인 점심으로 최고예요. 매콤한 맛이 스트레스 해소에 도움돼요. 오늘 날씨에 든든하게 먹기 좋아요.",recipe:{time:"25분",difficulty:"보통",steps:["닭고기를 한입 크기로 잘라요","양념장(고추장, 간장, 설탕)을 만들어요","채소와 닭고기를 양념에 버무려요","팬에 기름 두르고 볶아주면 완성!"]},ingredients:[{name:"닭고기",amount:"300g",keyword:"닭갈비용 닭고기"},{name:"고추장",amount:"2큰술",keyword:"해찬들 고추장"},{name:"양배추",amount:"1/4통",keyword:"양배추"},{name:"떡",amount:"100g",keyword:"떡볶이떡"}],pairing:"공깃밥 + 음료수",alternatives:["제육볶음","오삼불고기"]},
+  {menu:"비빔밥",emoji:"🥗",reason:"채소가 풍부해 영양 균형이 완벽해요. 간단하게 만들 수 있어 바쁜 직장인에게 딱이에요. 다양한 나물로 맛과 영양을 동시에!",recipe:{time:"15분",difficulty:"쉬움",steps:["밥을 그릇에 담아요","시금치, 당근, 콩나물 나물을 올려요","계란 프라이를 올려요","고추장과 참기름을 넣고 비벼요"]},ingredients:[{name:"밥",amount:"1공기",keyword:"햇반"},{name:"시금치",amount:"한줌",keyword:"시금치"},{name:"계란",amount:"1개",keyword:"계란"},{name:"고추장",amount:"1큰술",keyword:"비빔밥 고추장"}],pairing:"미역국 + 물김치",alternatives:["덮밥","볶음밥"]}
+];
+
 function page(id){
-  ["page-auth","page-profile","page-home"].forEach(p=>{
-    const el=document.getElementById(p);
-    if(el){el.style.display=(p===id)?"block":"none";}
+  ["page-auth","page-profile","page-home"].forEach(function(p){
+    document.getElementById(p).style.display=(p===id)?"block":"none";
   });
 }
-
 function H(){return{apikey:AK,Authorization:"Bearer "+TK,"Content-Type":"application/json"};}
-
-async function sbGet(path){
-  const r=await fetch(SB+path,{headers:H()});
-  return r.json();
-}
-async function sbPost(path,body,extra){
-  const h=Object.assign({},H(),extra||{});
-  const r=await fetch(SB+path,{method:"POST",headers:h,body:JSON.stringify(body)});
-  return r.json();
-}
-async function sbPatch(path,body){
-  const r=await fetch(SB+path,{method:"PATCH",headers:H(),body:JSON.stringify(body)});
-  return r.json();
-}
-
-function chips(id,items,field,multi){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.innerHTML="";
-  items.forEach(function(v){
-    const b=document.createElement("button");
-    b.className="chip"+(multi?(SEL[field].indexOf(v)>=0):(SEL[field]===v)?" on":"");
-    b.textContent=v;
-    b.onclick=function(){
-      if(multi){
-        const i=SEL[field].indexOf(v);
-        if(i>=0)SEL[field].splice(i,1);else SEL[field].push(v);
-      } else {SEL[field]=v;}
-      chips(id,items,field,multi);
-    };
-    el.appendChild(b);
-  });
-}
+async function sbGet(path){const r=await fetch(SB+path,{headers:H()});return r.json();}
 
 const REGIONS=["서울","경기 북부","경기 남부","인천","강원","충북","충남","대전","세종","전북","전남","광주","경북","경남","대구","울산","부산","제주"];
 const JOBS=["직장인","학생","자영업자","주부","프리랜서","무직","기타"];
@@ -150,6 +122,21 @@ const CANNOT=["돼지고기","소고기","닭고기","해산물","유제품","�
 const DISLIKE=["매운 음식","단 음식","짠 음식","기름진 음식","날 것","향신료","없음"];
 const WEATHER=["☀️ 맑음","🌧️ 비","❄️ 눈","🌫️ 흐림","🌬️ 바람","🌡️ 더위","🥶 추위"];
 const SEL={gender:"",age:"",job:"",region:"",cannot:[],dislike:[],diet:"없음",weather:""};
+
+function chips(id,items,field,multi){
+  const el=document.getElementById(id);el.innerHTML="";
+  items.forEach(function(v){
+    const b=document.createElement("button");
+    b.className="chip"+((multi?SEL[field].indexOf(v)>=0:SEL[field]===v)?" on":"");
+    b.textContent=v;
+    b.onclick=function(){
+      if(multi){const i=SEL[field].indexOf(v);if(i>=0)SEL[field].splice(i,1);else SEL[field].push(v);}
+      else SEL[field]=v;
+      chips(id,items,field,multi);
+    };
+    el.appendChild(b);
+  });
+}
 
 function setMode(m){
   MODE=m;
@@ -186,11 +173,8 @@ async function doAuth(){
       TK=ld.access_token;UID=ld.user.id;UEMAIL=email;
       localStorage.setItem("ms",JSON.stringify({t:TK,u:UID,e:email}));
       const pd=await sbGet("/rest/v1/profiles?id=eq."+UID);
-      if(Array.isArray(pd)&&pd[0]){
-        PRF=pd[0];
-        if(PRF.gender){initHome();page("page-home");}
-        else{initProfile();page("page-profile");}
-      } else {initProfile();page("page-profile");}
+      if(Array.isArray(pd)&&pd[0]){PRF=pd[0];if(PRF.gender){initHome();page("page-home");}else{initProfile();page("page-profile");}}
+      else{initProfile();page("page-profile");}
     }
   }catch(e){msg.textContent="오류: "+e.message;}
   finally{btn.textContent=MODE==="login"?"로그인":"가입하기";btn.disabled=false;}
@@ -221,10 +205,7 @@ function initHome(){
 }
 
 function showTab(name,btn){
-  ["rec","log","pv"].forEach(function(t){
-    const el=document.getElementById("tab-"+t);
-    if(el)el.style.display=(t===name)?"block":"none";
-  });
+  ["rec","log","pv"].forEach(function(t){document.getElementById("tab-"+t).style.display=(t===name)?"block":"none";});
   document.querySelectorAll("#page-home .tab").forEach(function(b){b.className="tab";});
   btn.className="tab on";
   if(name==="log")loadLogs();
@@ -233,18 +214,12 @@ function showTab(name,btn){
 async function doRec(){
   if(!SEL.weather){alert("날씨를 선택해주세요!");return;}
   const btn=document.getElementById("btn-rec");
-  btn.textContent="🤔 AI 분석 중...";btn.disabled=true;
+  btn.textContent="🤔 추천 중...";btn.disabled=true;
   document.getElementById("rec-result").innerHTML="";
-  const cannot=(PRF&&PRF.cannot_eat)?PRF.cannot_eat.join(","):"없음";
-  const dislike=(PRF&&PRF.dislike_eat)?PRF.dislike_eat.join(","):"없음";
-  const prompt="당신은 한국 식문화 전문가입니다.\n사용자: 성별 "+(PRF?PRF.gender:"")+", "+(PRF?PRF.age_group:"")+", "+(PRF?PRF.job:"")+", "+(PRF?PRF.region:"")+", 날씨 "+SEL.weather+"\n못먹는것: "+cannot+", 싫어하는것: "+dislike+", 식단: "+(PRF?PRF.diet_condition:"없음")+"\nJSON으로만 응답: {\"menu\":\"메뉴명\",\"emoji\":\"이모지\",\"reason\":\"추천이유3문장\",\"recipe\":{\"time\":\"시간\",\"difficulty\":\"쉬움/보통/어려움\",\"steps\":[\"1\",\"2\",\"3\",\"4\"]},\"ingredients\":[{\"name\":\"재료\",\"amount\":\"양\",\"keyword\":\"쿠팡검색어\"}],\"pairing\":\"페어링\",\"alternatives\":[\"대안1\",\"대안2\"]}";
-  try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})});
-    const data=await res.json();
-    const text=data.content.map(function(i){return i.text||"";}).join("");
-    const r=JSON.parse(text.replace(/```json|```/g,"").trim());
-    renderRec(r);
-  }catch(e){alert("오류: "+e.message);}
+  // 더미 데이터에서 랜덤 선택
+  await new Promise(function(r){setTimeout(r,1000);}); // 1초 딜레이로 자연스럽게
+  const r=DUMMY_MENUS[Math.floor(Math.random()*DUMMY_MENUS.length)];
+  renderRec(r);
   btn.textContent="🍴 맞춤 메뉴 추천받기";btn.disabled=false;
 }
 
@@ -253,50 +228,39 @@ function renderRec(r){
   const ings=r.ingredients.map(function(g){return '<a href="https://www.coupang.com/np/search?q='+encodeURIComponent(g.keyword)+'" target="_blank" style="display:flex;justify-content:space-between;padding:10px 12px;border-radius:9px;background:#0d0d0d;margin-bottom:6px;text-decoration:none"><div><div style="color:#f0f0f0;font-size:14px;font-weight:500">'+g.name+'</div><div style="color:#707070;font-size:12px">'+g.amount+'</div></div><div style="color:#c8f135;font-size:12px;align-self:center">구매 →</div></a>';}).join("");
   const alts=r.alternatives.map(function(a){return '<span class="tag">'+a+'</span>';}).join("");
   const menu=r.menu.replace(/'/g,"\\'");
-  document.getElementById("rec-result").innerHTML='<div style="background:#161616;border:1px solid #c8f135;border-radius:20px;padding:22px;margin-bottom:10px"><div style="font-size:44px;margin-bottom:6px">'+r.emoji+'</div><div style="font-size:24px;font-weight:700;margin-bottom:8px">'+r.menu+'</div><p style="color:#707070;font-size:14px;line-height:1.7;margin:0 0 14px">'+r.reason+'</p><span class="tag">⏱ '+r.recipe.time+'</span><span class="tag">📊 '+r.recipe.difficulty+'</span><span class="tag">🥂 '+r.pairing+'</span></div><div class="card"><div style="font-weight:600;margin-bottom:12px">📋 레시피</div>'+steps+'</div><div class="card"><div style="font-weight:600;margin-bottom:12px">🛒 재료 구매 (클릭→쿠팡)</div>'+ings+'</div><div class="card"><div style="font-weight:600;margin-bottom:8px">🔄 다른 추천</div>'+alts+'</div><div class="card" style="text-align:center"><div style="font-size:28px;margin-bottom:6px">📸</div><div style="font-weight:600;margin-bottom:4px">먹은 사진 인증하고 +50P!</div><div style="color:#707070;font-size:13px;margin-bottom:14px">AI가 사진을 확인하고 포인트를 드려요</div><button class="btn" onclick="startUpload(\''+menu+'\')">📷 사진 업로드</button></div>';
+  document.getElementById("rec-result").innerHTML='<div style="background:#0d0d0d;border:1px solid #333;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#c8f135">⚠️ 테스트 모드 - API 연결 시 실제 AI 추천으로 바뀌어요</div><div style="background:#161616;border:1px solid #c8f135;border-radius:20px;padding:22px;margin-bottom:10px"><div style="font-size:44px;margin-bottom:6px">'+r.emoji+'</div><div style="font-size:24px;font-weight:700;margin-bottom:8px">'+r.menu+'</div><p style="color:#707070;font-size:14px;line-height:1.7;margin:0 0 14px">'+r.reason+'</p><span class="tag">⏱ '+r.recipe.time+'</span> <span class="tag">📊 '+r.recipe.difficulty+'</span> <span class="tag">🥂 '+r.pairing+'</span></div><div class="card"><div style="font-weight:600;margin-bottom:12px">📋 레시피</div>'+steps+'</div><div class="card"><div style="font-weight:600;margin-bottom:12px">🛒 재료 구매 (클릭→쿠팡)</div>'+ings+'</div><div class="card"><div style="font-weight:600;margin-bottom:8px">🔄 다른 추천</div>'+alts+'</div><div class="card" style="text-align:center"><div style="font-size:28px;margin-bottom:6px">📸</div><div style="font-weight:600;margin-bottom:4px">먹은 사진 인증하고 +50P!</div><div style="color:#707070;font-size:13px;margin-bottom:14px">사진을 올리면 포인트를 드려요</div><button class="btn" onclick="startUpload(\''+menu+'\')">📷 사진 업로드</button></div>';
 }
 
 function startUpload(menu){UMENU=menu;document.getElementById("file-inp").click();}
 
 async function doPhoto(e){
   const file=e.target.files[0];if(!file||!UMENU)return;
-  alert("AI가 사진 분석 중이에요. 잠시 기다려주세요...");
+  alert("사진을 분석 중이에요. 잠시 기다려주세요...");
   const path=UID+"/"+Date.now()+".jpg";
   await fetch(SB+"/storage/v1/object/meal-photos/"+path,{method:"POST",headers:{apikey:AK,Authorization:"Bearer "+TK},body:file});
   const photoUrl=SB+"/storage/v1/object/public/meal-photos/"+path;
-  const reader=new FileReader();
-  reader.onload=async function(ev){
-    const b64=ev.target.result.split(",")[1];
-    try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}},{type:"text",text:"이 사진이 \""+UMENU+"\"인지 확인. JSON만: {\"match\":true,\"confidence\":85,\"detected\":\"음식명\"}"}]}]})});
-      const ad=await res.json();
-      const v=JSON.parse(ad.content.map(function(i){return i.text||"";}).join("").replace(/```json|```/g,"").trim());
-      const earned=(v.match&&v.confidence>=70)?50:0;
-      await fetch(SB+"/rest/v1/meal_logs",{method:"POST",headers:Object.assign({},H(),{Prefer:"return=representation"}),body:JSON.stringify({user_id:UID,menu_name:UMENU,photo_url:photoUrl,ai_verified:v.match,points_earned:earned})});
-      if(earned>0){
-        const np=(PRF.points||0)+earned;
-        await fetch(SB+"/rest/v1/profiles?id=eq."+UID,{method:"PATCH",headers:H(),body:JSON.stringify({points:np})});
-        PRF.points=np;document.getElementById("h-pts").textContent="🪙 "+np+"P";
-      }
-      alert(v.match?"✅ 인증 성공! +"+earned+"P 지급!":"❌ 매칭 실패. 감지된 음식: \""+v.detected+"\"");
-      loadLogs();
-    }catch(err){alert("분석 오류: "+err.message);}
-    UMENU=null;e.target.value="";
-  };
-  reader.readAsDataURL(file);
+  // 테스트 모드: 무조건 인증 성공 처리
+  const earned=50;
+  await fetch(SB+"/rest/v1/meal_logs",{method:"POST",headers:Object.assign({},H(),{Prefer:"return=representation"}),body:JSON.stringify({user_id:UID,menu_name:UMENU,photo_url:photoUrl,ai_verified:true,points_earned:earned})});
+  const np=(PRF.points||0)+earned;
+  await fetch(SB+"/rest/v1/profiles?id=eq."+UID,{method:"PATCH",headers:H(),body:JSON.stringify({points:np})});
+  PRF.points=np;document.getElementById("h-pts").textContent="🪙 "+np+"P";
+  alert("✅ 사진 업로드 성공! +"+earned+"P 지급! (테스트 모드)");
+  loadLogs();UMENU=null;e.target.value="";
 }
 
 async function loadLogs(){
-  const data=await sbGet("/rest/v1/meal_logs?user_id=eq."+UID+"&order=created_at.desc&limit=20");
-  const el=document.getElementById("log-list");
-  if(!el)return;
-  if(!Array.isArray(data)||!data.length){el.innerHTML='<div style="text-align:center;padding:60px 0;color:#707070"><div style="font-size:40px;margin-bottom:10px">🍽️</div>아직 기록이 없어요</div>';return;}
-  el.innerHTML=data.map(function(l){return '<div class="card"><div style="display:flex;justify-content:space-between"><div><div style="font-weight:600">'+l.menu_name+'</div><div style="color:#707070;font-size:12px;margin-top:3px">'+new Date(l.created_at).toLocaleDateString("ko-KR")+'</div></div><div style="text-align:right"><div style="color:'+(l.ai_verified?"#c8f135":"#ff4d4d")+';font-size:13px;font-weight:600">'+(l.ai_verified?"✅ 인증":"❌ 미인증")+'</div>'+(l.points_earned>0?'<div style="color:#c8f135;font-size:12px">+'+l.points_earned+'P</div>':"")+'</div></div>'+(l.photo_url?'<img src="'+l.photo_url+'" style="width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover">':"")+' </div>';}).join("");
+  try{
+    const data=await sbGet("/rest/v1/meal_logs?user_id=eq."+UID+"&order=created_at.desc&limit=20");
+    const el=document.getElementById("log-list");
+    if(!Array.isArray(data)||!data.length){el.innerHTML='<div style="text-align:center;padding:60px 0;color:#707070"><div style="font-size:40px;margin-bottom:10px">🍽️</div>아직 기록이 없어요</div>';return;}
+    el.innerHTML=data.map(function(l){return '<div class="card"><div style="display:flex;justify-content:space-between"><div><div style="font-weight:600">'+l.menu_name+'</div><div style="color:#707070;font-size:12px;margin-top:3px">'+new Date(l.created_at).toLocaleDateString("ko-KR")+'</div></div><div style="text-align:right"><div style="color:'+(l.ai_verified?"#c8f135":"#ff4d4d")+';font-size:13px;font-weight:600">'+(l.ai_verified?"✅ 인증":"❌ 미인증")+'</div>'+(l.points_earned>0?'<div style="color:#c8f135;font-size:12px">+'+l.points_earned+'P</div>':"")+'</div></div>'+(l.photo_url?'<img src="'+l.photo_url+'" style="width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover">':"")+' </div>';}).join("");
+  }catch(e){}
 }
 
 function renderPV(){
   const p=PRF||{};
-  document.getElementById("pv-content").innerHTML='<div class="card"><div style="color:#c8f135;font-weight:700;font-size:20px;margin-bottom:4px">'+(p.nickname||"사용자")+'</div><div style="color:#707070;font-size:13px;margin-bottom:16px">'+(UEMAIL||"")+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+[["성별",p.gender],["나이대",p.age_group],["직업",p.job],["지역",p.region],["식단조건",p.diet_condition],["총 포인트","🪙 "+(p.points||0)+"P"]].map(function(a){return '<div style="background:#0d0d0d;border-radius:10px;padding:10px 12px"><div style="color:#707070;font-size:11px">'+a[0]+'</div><div style="color:'+(a[0]==="총 포인트"?"#c8f135":"#f0f0f0")+';font-weight:600;font-size:14px">'+(a[1]||"-")+'</div></div>';}).join("")+'</div></div><div class="card"><div style="font-weight:600;margin-bottom:8px">못 먹는 음식</div><div style="margin-bottom:14px">'+(p.cannot_eat&&p.cannot_eat.length?p.cannot_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070;font-size:13px'>없음</span>")+'</div><div style="font-weight:600;margin-bottom:8px">싫어하는 음식</div><div>'+(p.dislike_eat&&p.dislike_eat.length?p.dislike_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070;font-size:13px'>없음</span>")+'</div></div>';
+  document.getElementById("pv-content").innerHTML='<div class="card"><div style="color:#c8f135;font-weight:700;font-size:20px;margin-bottom:4px">'+(p.nickname||"사용자")+'</div><div style="color:#707070;font-size:13px;margin-bottom:16px">'+(UEMAIL||"")+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+[["성별",p.gender],["나이대",p.age_group],["직업",p.job],["지역",p.region],["식단조건",p.diet_condition],["총 포인트","🪙 "+(p.points||0)+"P"]].map(function(a){return '<div style="background:#0d0d0d;border-radius:10px;padding:10px 12px"><div style="color:#707070;font-size:11px">'+a[0]+'</div><div style="color:'+(a[0]==="총 포인트"?"#c8f135":"#f0f0f0")+';font-weight:600;font-size:14px">'+(a[1]||"-")+'</div></div>';}).join("")+'</div></div><div class="card"><div style="font-weight:600;margin-bottom:8px">못 먹는 음식</div><div style="margin-bottom:14px">'+(p.cannot_eat&&p.cannot_eat.length?p.cannot_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070'>없음</span>")+'</div><div style="font-weight:600;margin-bottom:8px">싫어하는 음식</div><div>'+(p.dislike_eat&&p.dislike_eat.length?p.dislike_eat.map(function(f){return '<span class="tag">'+f+'</span>';}).join(""):"<span style='color:#707070'>없음</span>")+'</div></div>';
 }
 
 function doLogout(){TK=null;UID=null;UEMAIL=null;PRF=null;localStorage.removeItem("ms");page("page-auth");}
@@ -306,15 +270,9 @@ window.onload=async function(){
   try{
     const saved=localStorage.getItem("ms");
     if(saved){
-      const s=JSON.parse(saved);
-      TK=s.t;UID=s.u;UEMAIL=s.e;
+      const s=JSON.parse(saved);TK=s.t;UID=s.u;UEMAIL=s.e;
       const pd=await sbGet("/rest/v1/profiles?id=eq."+UID);
-      if(Array.isArray(pd)&&pd[0]){
-        PRF=pd[0];
-        if(PRF.gender){initHome();page("page-home");}
-        else{initProfile();page("page-profile");}
-        return;
-      }
+      if(Array.isArray(pd)&&pd[0]){PRF=pd[0];if(PRF.gender){initHome();page("page-home");return;}else{initProfile();page("page-profile");return;}}
     }
   }catch(e){}
   page("page-auth");
